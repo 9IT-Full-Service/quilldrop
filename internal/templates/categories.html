@@ -1,0 +1,11 @@
+{{define "title"}}Kategorien &mdash; {{.Site.Title}}{{end}}
+{{define "content"}}
+<div class="tags-page">
+    <h1>Kategorien</h1>
+    <div class="tags-cloud">
+        {{range $cat, $count := .Categories}}
+        <a href="/categories/{{lower $cat}}/" class="tag tag-large">{{$cat}} <span class="tag-count">{{$count}}</span></a>
+        {{end}}
+    </div>
+</div>
+{{end}}

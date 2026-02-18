@@ -1,0 +1,13 @@
+FROM --platform=$BUILDPLATFORM nginx AS builder
+
+WORKDIR /app
+
+COPY . .
+
+RUN ./quilldrop generate
+
+FROM --platform=$BUILDPLATFORM nginx
+
+COPY --from=builder /app/output /usr/share/nginx/html
+
+EXPOSE 80

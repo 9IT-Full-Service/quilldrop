@@ -1,0 +1,31 @@
+title: "Küpper Blog"
+description: "Tech Blog - DevOps, Kubernetes, Self-Hosted"
+author: "Rüdiger Küpper"
+baseURL: "https://blog.kuepper.nrw"
+port: 8080
+postsPerPage: 5
+contentDir: "content"
+sitesDir: "sites"
+outputDir: "output"
+
+menu:
+  - label: "Home"
+    url: "/"
+  - label: "Projekte"
+    children:
+      # - label: "VM-Manager"
+      #   url: "/sites/projects/vm-manager/"
+      - label: "VM-Tracker"
+        url: "/sites/projects/vm-tracker/"
+      - label: "QuillDrop"
+        url: "/sites/projects/quilldrop/"
+  - label: "Über mich"
+    url: "/sites/ueber-mich/"
+  - label: "Tags"
+    url: "/tags/"
+  - label: "Kategorien"
+    url: "/categories/"
+  # - label: "Datenschutz"
+  #   url: "/sites/datenschutz"
+  # - label: "Impressum"
+  #   url: "/sites/impressum"

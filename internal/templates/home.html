@@ -1,0 +1,54 @@
+{{define "title"}}{{.Site.Title}}{{end}}
+{{define "content"}}
+<div class="hero">
+    <h1 class="hero-title">{{.Site.Title}}</h1>
+    <p class="hero-sub">{{.Site.Description}}</p>
+</div>
+<div class="post-list">
+    {{range .Posts}}
+    <article class="post-card{{if .GetCover}} has-cover{{end}}">
+        {{if .GetCover}}
+        <a href="/posts/{{.Slug}}/" class="post-card-cover">
+            <img src="{{.GetCover}}" alt="{{.Title}}" loading="lazy">
+        </a>
+        {{end}}
+        <div class="post-card-body">
+            <div class="post-card-meta">
+                <time datetime="{{isoDate .Date.Time}}">{{formatDate .Date.Time}}</time>
+                <div class="post-tags">
+                    {{range .Tags}}<a href="/tags/{{lower .}}/" class="tag">{{.}}</a>{{end}}
+                </div>
+            </div>
+            <h2 class="post-card-title"><a href="/posts/{{.Slug}}/">{{.Title}}</a></h2>
+            <p class="post-card-preview">{{.GetPreview}}</p>
+            <a href="/posts/{{.Slug}}/" class="read-more">Weiterlesen &rarr;</a>
+        </div>
+    </article>
+    {{end}}
+</div>
+{{if gt .TotalPages 1}}
+<nav class="pagination">
+    {{if gt .Page 1}}
+    <a href="{{pageURL (sub .Page 1)}}" class="pagination-btn pagination-prev">&larr; Neuere</a>
+    {{else}}
+    <span class="pagination-btn pagination-prev disabled">&larr; Neuere</span>
+    {{end}}
+    <div class="pagination-pages">
+        {{range paginationRange $.Page $.TotalPages}}
+        {{if isEllipsis .}}
+        <span class="pagination-ellipsis">&hellip;</span>
+        {{else if eq . $.Page}}
+        <span class="pagination-num active">{{.}}</span>
+        {{else}}
+        <a href="{{pageURL .}}" class="pagination-num">{{.}}</a>
+        {{end}}
+        {{end}}
+    </div>
+    {{if lt .Page .TotalPages}}
+    <a href="{{pageURL (add .Page 1)}}" class="pagination-btn pagination-next">Ältere &rarr;</a>
+    {{else}}
+    <span class="pagination-btn pagination-next disabled">Ältere &rarr;</span>
+    {{end}}
+</nav>
+{{end}}
+{{end}}

@@ -1,0 +1,29 @@
+{{define "title"}}{{.Tag}} &mdash; {{.Site.Title}}{{end}}
+{{define "content"}}
+<div class="tag-page">
+    <h1>Posts mit Tag: <span class="highlight">{{.Tag}}</span></h1>
+    <div class="post-list">
+        {{range .Posts}}
+        <article class="post-card{{if .GetCover}} has-cover{{end}}">
+            {{if .GetCover}}
+            <a href="/posts/{{.Slug}}/" class="post-card-cover">
+                <img src="{{.GetCover}}" alt="{{.Title}}" loading="lazy">
+            </a>
+            {{end}}
+            <div class="post-card-body">
+                <div class="post-card-meta">
+                    <time datetime="{{isoDate .Date.Time}}">{{formatDate .Date.Time}}</time>
+                    <div class="post-tags">
+                        {{range .Tags}}<a href="/tags/{{lower .}}/" class="tag">{{.}}</a>{{end}}
+                    </div>
+                </div>
+                <h2 class="post-card-title"><a href="/posts/{{.Slug}}/">{{.Title}}</a></h2>
+                <p class="post-card-preview">{{.GetPreview}}</p>
+                <a href="/posts/{{.Slug}}/" class="read-more">Weiterlesen &rarr;</a>
+            </div>
+        </article>
+        {{end}}
+    </div>
+    <a href="/tags/" class="back-link">&larr; Alle Tags</a>
+</div>
+{{end}}

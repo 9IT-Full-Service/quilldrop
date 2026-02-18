@@ -1,0 +1,11 @@
+{{define "title"}}{{.Page.Title}} &mdash; {{.Site.Title}}{{end}}
+{{define "content"}}
+<article class="page-single">
+    <header class="page-header">
+        <h1 class="page-title">{{.Page.Title}}</h1>
+    </header>
+    <div class="post-content">
+        {{safeHTML .Page.HTMLContent}}
+    </div>
+</article>
+{{end}}

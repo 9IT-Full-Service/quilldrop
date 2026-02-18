@@ -1,0 +1,31 @@
+{{define "title"}}{{.Post.Title}} &mdash; {{.Site.Title}}{{end}}
+{{define "content"}}
+<article class="post-single">
+    <header class="post-header">
+        <div class="post-header-meta">
+            <time datetime="{{isoDate .Post.Date.Time}}">{{formatDate .Post.Date.Time}}</time>
+            <span class="post-author">{{.Post.Author}}</span>
+        </div>
+        <h1 class="post-title">{{.Post.Title}}</h1>
+        <div class="post-tags">
+            {{range .Post.Tags}}<a href="/tags/{{lower .}}/" class="tag">{{.}}</a>{{end}}
+        </div>
+    </header>
+    {{if .Post.GetCover}}
+    <div class="post-cover">
+        <img src="{{.Post.GetCover}}" alt="{{.Post.Title}}" loading="lazy">
+    </div>
+    {{end}}
+    {{if .Post.TOC}}
+    <nav class="toc" id="toc">
+        <h3>Inhaltsverzeichnis</h3>
+    </nav>
+    {{end}}
+    <div class="post-content">
+        {{safeHTML .Post.HTMLContent}}
+    </div>
+    <div class="post-footer">
+        <a href="/" class="back-link">&larr; Zurück zur Startseite</a>
+    </div>
+</article>
+{{end}}
