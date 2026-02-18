@@ -72,7 +72,7 @@ jobs:
 
     uses: 9it-full-service/shared-workflows/.github/workflows/build-image.yml@main
     with:
-      image_name: ghcr.io/9it-full-service/auth-service
+      image_name: ghcr.io/9it-full-service/quilldrop
       dockerfile: ./Dockerfile
       context: .
       arch: ${{ matrix.arch }}
@@ -93,7 +93,7 @@ jobs:
     needs: [prepare, build]
     uses: 9it-full-service/shared-workflows/.github/workflows/create-manifest.yml@main
     with:
-      image_name: ghcr.io/9it-full-service/auth-service
+      image_name: ghcr.io/9it-full-service/quilldrop
       version: ${{ needs.prepare.outputs.version }}
       architectures: '["arm64"]'
       tag_latest: ${{ github.ref_name == 'main' && needs.prepare.outputs.is_release == 'true' }}

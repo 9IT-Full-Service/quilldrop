@@ -13,7 +13,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
-        "ghcr.io/mogenius/mogenius-operator"
+        "ghcr.io/9it-full-service/quilldrop"
       ],
       "matchFileNames": [
         "helm/**"
