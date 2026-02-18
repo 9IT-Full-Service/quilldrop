@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.4...v1.1.5) (2026-02-18)
+
+
+### Bug Fixes
+
+* rename workflow [skip ci] ([bc5250a](https://github.com/9IT-Full-Service/quilldrop/commit/bc5250a8532035836e7adda2c694f72860775fee))
+
 ## [1.1.4](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.3...v1.1.4) (2026-02-18)
 
 
