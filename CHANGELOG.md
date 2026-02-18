@@ -1,3 +1,11 @@
+## [1.1.4](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.3...v1.1.4) (2026-02-18)
+
+
+### Bug Fixes
+
+* add docker image for images [skip ci] ([257f09e](https://github.com/9IT-Full-Service/quilldrop/commit/257f09e82aaaddf2a3d41148efde96a3a8b70bc0))
+* add images to Docker ignore ([2033bde](https://github.com/9IT-Full-Service/quilldrop/commit/2033bdea0eb4cac7aedd7cbae2b47292da2b9616))
+
 ## [1.1.3](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.2...v1.1.3) (2026-02-18)
 
 
