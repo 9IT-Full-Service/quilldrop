@@ -6,7 +6,7 @@
 # Adjust the matrix.include array to control which architectures are built.
 # ==============================================================================
 
-name: Build Image
+name: Build Images Image
 
 on:
   workflow_dispatch:
