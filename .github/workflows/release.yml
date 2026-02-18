@@ -73,7 +73,7 @@ jobs:
     uses: 9it-full-service/shared-workflows/.github/workflows/build-image.yml@main
     with:
       image_name: ghcr.io/9it-full-service/quilldrop
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile-static
       context: .
       arch: ${{ matrix.arch }}
       runner: ${{ matrix.runner }}
