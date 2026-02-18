@@ -296,11 +296,6 @@ toc: false
 
 Das ist mein erster Post mit **QuillDrop**.
 
-## Code-Beispiel
-
-```go
-fmt.Println("Hello QuillDrop!")
-```
 ```
 
 ### Lokale Vorschau
