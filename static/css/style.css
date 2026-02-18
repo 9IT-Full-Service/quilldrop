@@ -1108,11 +1108,15 @@ body {
         right: 0;
         bottom: 0;
         background: var(--bg-primary);
+        opacity: 1;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 1.8rem;
+        justify-content: flex-start;
+        gap: 1.5rem;
+        padding: 5rem 2rem 2rem;
         z-index: 105;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .nav-links.open {
@@ -1122,6 +1126,7 @@ body {
     .nav-links > a,
     .nav-dropdown-toggle {
         font-size: 1.2rem;
+        color: var(--text-primary);
     }
 
     .nav-dropdown-menu {
@@ -1146,6 +1151,7 @@ body {
     .nav-dropdown-menu a {
         padding: 0.4rem 0;
         font-size: 1rem;
+        color: var(--text-secondary);
     }
 
     .search-container {
@@ -1159,10 +1165,16 @@ body {
         left: 1rem;
         right: 1rem;
         width: auto;
+        z-index: 110;
     }
 
     .search-results {
         max-height: calc(100vh - 10rem);
+    }
+
+    .nav-rss,
+    #theme-toggle {
+        color: var(--text-primary);
     }
 }
 
