@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.0...v1.1.1) (2026-02-18)
+
+
+### Bug Fixes
+
+* responsive menu ([7b6ee73](https://github.com/9IT-Full-Service/quilldrop/commit/7b6ee73596304baad36ff1c5e70a363361325fd1))
+
 # [1.1.0](https://github.com/9IT-Full-Service/quilldrop/compare/v1.0.1...v1.1.0) (2026-02-18)
 
 
