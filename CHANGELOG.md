@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/9IT-Full-Service/quilldrop/compare/v1.0.0...v1.0.1) (2026-02-18)
+
+
+### Bug Fixes
+
+* change Dickerfile name ([df11eae](https://github.com/9IT-Full-Service/quilldrop/commit/df11eaef4727ebf225afd42c94190f1e20012f12))
+
 # 1.0.0 (2026-02-18)
 
 
