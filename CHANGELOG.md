@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.1...v1.1.2) (2026-02-18)
+
+
+### Bug Fixes
+
+* footer Quildrop link ([846be7b](https://github.com/9IT-Full-Service/quilldrop/commit/846be7b90ad5bbf6752ad9931ab30fb5ab0ffb44))
+
 ## [1.1.1](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.0...v1.1.1) (2026-02-18)
 
 
