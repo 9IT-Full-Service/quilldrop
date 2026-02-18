@@ -1,3 +1,11 @@
+## [1.1.3](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.2...v1.1.3) (2026-02-18)
+
+
+### Bug Fixes
+
+* quilldrop fix template base navigation menu ([23a110f](https://github.com/9IT-Full-Service/quilldrop/commit/23a110ffc2bc0cb3f8de2423e690c1a34b652c85))
+* readme ([27e4314](https://github.com/9IT-Full-Service/quilldrop/commit/27e4314f557ba8cc8de517c4122dd41b76dc93fc))
+
 ## [1.1.2](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.1...v1.1.2) (2026-02-18)
 
 
