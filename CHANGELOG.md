@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.3...v1.2.4) (2026-02-19)
+
+
+### Bug Fixes
+
+* add favicon ([0bf020c](https://github.com/9IT-Full-Service/quilldrop/commit/0bf020c9a6caed1e8c321f7d7e85efa0c807cf7d))
+
 ## [1.2.3](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.2...v1.2.3) (2026-02-19)
 
 
