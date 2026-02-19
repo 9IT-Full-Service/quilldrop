@@ -8,7 +8,7 @@ on:
     #   - 'v*' # z.B. v1.2.3
 
 permissions:
-  contents: read
+  contents: write
   packages: write
   id-token: write
 
