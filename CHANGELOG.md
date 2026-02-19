@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.7...v1.2.8) (2026-02-19)
+
+
+### Bug Fixes
+
+* release-quilldrop.yml [skip ci] ([7561a6f](https://github.com/9IT-Full-Service/quilldrop/commit/7561a6fc4b2b0d2eca3b1706f78c1b645c725351))
+
 ## [1.2.7](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.6...v1.2.7) (2026-02-19)
 
 
