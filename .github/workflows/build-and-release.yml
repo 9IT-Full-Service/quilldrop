@@ -1,0 +1,120 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.2.3)'
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  BINARY_NAME: quilldrop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+          - goos: windows
+            goarch: arm64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build static binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: '0'
+        run: |
+          set -euo pipefail
+
+          BIN="${BINARY_NAME}-${GOOS}-${GOARCH}"
+          if [ "${GOOS}" = "windows" ]; then
+            BIN="${BIN}.exe"
+          fi
+
+          go build -trimpath -ldflags="-s -w" -o "${BIN}" .
+
+          mkdir -p dist
+          if [ "${GOOS}" = "windows" ]; then
+            zip "dist/${BINARY_NAME}-${GOOS}-${GOARCH}.zip" "${BIN}"
+          else
+            tar -czf "dist/${BINARY_NAME}-${GOOS}-${GOARCH}.tar.gz" "${BIN}"
+          fi
+
+      - name: Generate checksum
+        run: |
+          cd dist
+          sha256sum * > checksums-${{ matrix.goos }}-${{ matrix.goarch }}.txt
+          cat checksums-${{ matrix.goos }}-${{ matrix.goarch }}.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BINARY_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Merge checksums
+        run: |
+          cd artifacts
+          cat checksums-*.txt > checksums.txt
+          rm checksums-*.txt
+          echo "=== checksums.txt ==="
+          cat checksums.txt
+
+      - name: Determine tag
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: List release assets
+        run: ls -la artifacts/
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.tag.outputs.version }}" \
+            --repo "${{ github.repository }}" \
+            --title "${{ steps.tag.outputs.version }}" \
+            --generate-notes \
+            artifacts/*

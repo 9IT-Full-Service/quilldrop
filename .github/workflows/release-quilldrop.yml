@@ -1,8 +1,8 @@
 name: build-and-release
 
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:
     # tags:
     #   - 'v*' # z.B. v1.2.3
@@ -71,18 +71,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # goos: [linux,]
-        # goarch: [arm64]
-        goos: [linux, darwin]
+        goos: [linux, darwin, windows]
         goarch: [amd64, arm64]
-        # goos: [linux, darwin, windows]
-        # goarch: [amd64, arm64,arm]
-        # exclude:
-        #   # ARM 32-bit ist nur für Linux sinnvoll
-        #   - goos: darwin
-        #     goarch: arm
-        #   - goos: windows
-        #     goarch: arm
+        exclude:
+          - goos: windows
+            goarch: amd64
 
     steps:
       - uses: actions/checkout@v6
