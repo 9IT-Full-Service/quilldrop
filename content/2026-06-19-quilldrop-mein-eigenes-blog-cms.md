@@ -102,7 +102,7 @@ Das ist das Schöne an einem Static Site Generator: Die fertige Seite ist nur no
 
 Nach Jahren mit verschiedenen CMS-Systemen läuft der Blog jetzt auf meiner eigenen Software. Alles ist migriert, alle Funktionen sind da und das System macht genau das, was es soll - nicht mehr und nicht weniger.
 
-Der Code ist Open Source und auf [GitHub](https://github.com/ruedigerp/quilldrop) [^verfügbar]. Wer einen schnellen, minimalistischen Blog ohne Overhead sucht, kann sich QuillDrop gerne anschauen.
+Der Code ist Open Source und auf [GitHub](https://github.com/9it-full-service/quilldrop) [^verfügbar]. Wer einen schnellen, minimalistischen Blog ohne Overhead sucht, kann sich QuillDrop gerne anschauen.
 
 > Write. Save. Published.
 
