@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.1...v1.2.2) (2026-02-19)
+
+
+### Bug Fixes
+
+* new blog post ([f3faa1b](https://github.com/9IT-Full-Service/quilldrop/commit/f3faa1b1dbe0f82e48773178aa234ee9c0406770))
+
 ## [1.2.1](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.0...v1.2.1) (2026-02-19)
 
 
