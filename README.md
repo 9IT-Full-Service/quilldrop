@@ -1,283 +1,285 @@
 # QuillDrop
 
-**QuillDrop** ist ein modernes, minimalistisches Blog-CMS, geschrieben in Go. Es kombiniert die Geschwindigkeit eines Static Site Generators mit der Flexibilität eines dynamischen HTTP-Servers - ohne externe Datenbank, ohne JavaScript-Frameworks, ohne Overhead.
+**QuillDrop** is a modern, minimalist blog CMS written in Go. It combines the speed of a static site generator with the flexibility of a dynamic HTTP server — no external database, no JavaScript frameworks, no overhead.
 
-## Philosophie
+🇩🇪 [Deutsche Version](README-de.md)
+
+## Philosophy
 
 > Write. Save. Published.
 
-QuillDrop folgt dem Prinzip der maximalen Einfachheit: Markdown-Dateien schreiben, speichern - fertig. Kein Build-Tool-Chaos, kein Node.js, keine Datenbank. Ein einzelnes Go-Binary erledigt alles.
+QuillDrop follows the principle of maximum simplicity: write Markdown files, save them — done. No build tool chaos, no Node.js, no database. A single Go binary handles everything.
 
 ## Features
 
-### Dual-Mode Betrieb
+### Dual-Mode Operation
 
-QuillDrop unterstützt zwei Betriebsmodi in einem einzigen Binary:
+QuillDrop supports two modes of operation in a single binary:
 
-- **`quilldrop serve`** - Startet einen dynamischen HTTP-Server für lokale Entwicklung und Vorschau. Ideal zum Schreiben und sofortigen Testen neuer Posts.
-- **`quilldrop generate`** - Generiert eine komplette statische Website als HTML-Dateien. Perfekt für Deployment auf Nginx, Apache, CDN oder GitHub Pages.
+- **`quilldrop serve`** — Starts a dynamic HTTP server for local development and preview. Ideal for writing and instantly testing new posts.
+- **`quilldrop generate`** — Generates a complete static website as HTML files. Perfect for deployment on Nginx, Apache, CDN, or GitHub Pages.
 
-### Markdown mit YAML-Frontmatter
+### Markdown with YAML Frontmatter
 
-Posts und Seiten werden als einfache Markdown-Dateien mit YAML-Frontmatter geschrieben:
+Posts and pages are written as simple Markdown files with YAML frontmatter:
 
 ```yaml
 ---
-title: "Mein neuer Blogpost"
+title: "My New Blog Post"
 date: 2025-11-06 12:00:00
-author: "Max Mustermann"
+author: "Jane Doe"
 cover: "/images/posts/2025/11/cover.webp"
 tags: [Kubernetes, DevOps, Self-Hosted]
-categories: [Technik]
-preview: "Kurze Vorschau des Posts..."
+categories: [Tech]
+preview: "A short preview of the post..."
 draft: false
 toc: true
 ---
 
-# Hier beginnt der Post
+# Post starts here
 
-Normales Markdown mit allen Extras...
+Regular Markdown with all the extras...
 ```
 
-Unterstützte Frontmatter-Felder:
+Supported frontmatter fields:
 
-| Feld | Beschreibung |
-|------|-------------|
-| `title` | Titel des Posts |
-| `date` | Veröffentlichungsdatum (mehrere Formate unterstützt) |
-| `update` | Letzte Aktualisierung |
-| `author` | Autor des Posts |
-| `cover` / `featureImage` | Cover-Bild (mit Fallback) |
-| `tags` | Liste von Tags |
-| `categories` | Liste von Kategorien |
-| `preview` | Benutzerdefinierte Vorschau (sonst automatisch aus erstem Absatz) |
-| `draft` | Entwurf - wird nicht veröffentlicht |
-| `toc` | Inhaltsverzeichnis automatisch generieren |
-| `hide` | Post verstecken |
-| `top` | Post oben anpinnen |
+| Field | Description |
+|-------|-------------|
+| `title` | Post title |
+| `date` | Publication date (multiple formats supported) |
+| `update` | Last updated |
+| `author` | Post author |
+| `cover` / `featureImage` | Cover image (with fallback) |
+| `tags` | List of tags |
+| `categories` | List of categories |
+| `preview` | Custom preview (otherwise auto-generated from first paragraph) |
+| `draft` | Draft — will not be published |
+| `toc` | Automatically generate table of contents |
+| `hide` | Hide post |
+| `top` | Pin post to top |
 
-### Erweitertes Markdown-Rendering
+### Extended Markdown Rendering
 
-QuillDrop nutzt [Goldmark](https://github.com/yuin/goldmark) als Markdown-Engine mit folgenden Erweiterungen:
+QuillDrop uses [Goldmark](https://github.com/yuin/goldmark) as its Markdown engine with the following extensions:
 
-- **GitHub Flavored Markdown (GFM)** - Tabellen, Strikethrough, Autolinks, Task-Listen
-- **Syntax Highlighting** - Über 200 Programmiersprachen mit dem Dracula-Theme via [Chroma](https://github.com/alecthomas/chroma)
-- **Emoji-Support** - Shortcodes wie `:rocket:`, `:tada:`, `:satellite:`
-- **Automatische Heading-IDs** - Für Ankerverlinkung und Inhaltsverzeichnis
-- **Raw HTML** - Einbettung von HTML direkt im Markdown
-- **Hugo-Kompatibilität** - `{{</* rawhtml */>}}` Shortcodes werden automatisch verarbeitet
+- **GitHub Flavored Markdown (GFM)** — Tables, strikethrough, autolinks, task lists
+- **Syntax Highlighting** — Over 200 programming languages with the Dracula theme via [Chroma](https://github.com/alecthomas/chroma)
+- **Emoji Support** — Shortcodes like `:rocket:`, `:tada:`, `:satellite:`
+- **Automatic Heading IDs** — For anchor linking and table of contents
+- **Raw HTML** — Embed HTML directly in Markdown
+- **Hugo Compatibility** — `{{</* rawhtml */>}}` shortcodes are processed automatically
 
-### Responsives Design mit Dark/Light Theme
+### Responsive Design with Dark/Light Theme
 
-Das mitgelieferte Theme bietet:
+The included theme offers:
 
-- **Dark Mode als Default** mit einem hellen Alternativ-Theme
-- **Theme Toggle** mit localStorage-Persistenz (bleibt nach Reload erhalten)
-- **Futuristisches Design** - Dunkle Hintergrunde, Cyan-Akzente, subtile Glow-Effekte
-- **Responsive Layout** - Mobile-first, optimiert für alle Bildschirmgrößen
-- **Hamburger-Navigation** auf mobilen Geräten mit Fullscreen-Overlay und eigenem Stacking Context
-- **Dropdown-Menus** für verschachtelte Navigation (Touch-optimiert auf Mobile)
-- **Integrierte Suche** — Lupe in der Navbar mit Ctrl+K Shortcut
-- **Typographie** - Inter als Textfont, JetBrains Mono für Code und Metadaten
+- **Dark Mode as default** with a light alternative theme
+- **Theme Toggle** with localStorage persistence (survives page reloads)
+- **Futuristic Design** — Dark backgrounds, cyan accents, subtle glow effects
+- **Responsive Layout** — Mobile-first, optimized for all screen sizes
+- **Hamburger Navigation** on mobile devices with fullscreen overlay and dedicated stacking context
+- **Dropdown Menus** for nested navigation (touch-optimized on mobile)
+- **Integrated Search** — Magnifying glass in the navbar with Ctrl+K shortcut
+- **Typography** — Inter as body font, JetBrains Mono for code and metadata
 
-### Navigation und Menü
+### Navigation and Menu
 
-Das Navigationsmenü wird vollständig über die `config.yaml` konfiguriert und unterstützt verschachtelte Dropdown-Menüs:
+The navigation menu is fully configured via `config.yaml` and supports nested dropdown menus:
 
 ```yaml
 menu:
   - label: "Home"
     url: "/"
-  - label: "Projekte"
+  - label: "Projects"
     children:
       - label: "VM-Manager"
-        url: "/sites/projekte/vm-manager"
+        url: "/sites/projects/vm-manager"
       - label: "VM-Tracker"
-        url: "/sites/projekte/vm-tracker"
+        url: "/sites/projects/vm-tracker"
       - label: "QuillDrop"
-        url: "/sites/projekte/quilldrop"
-  - label: "Über mich"
-    url: "/sites/ueber-mich"
+        url: "/sites/projects/quilldrop"
+  - label: "About"
+    url: "/sites/about"
   - label: "Tags"
     url: "/tags"
 ```
 
-Neue Menüpunkte und Untermenüs können jederzeit durch einfaches Erweitern der YAML-Konfiguration hinzugefügt werden.
+New menu items and submenus can be added at any time by simply extending the YAML configuration.
 
 ### Pagination
 
-Die Startseite zeigt eine konfigurierbare Anzahl von Posts pro Seite (Standard: 5). Die Pagination bietet:
+The homepage displays a configurable number of posts per page (default: 5). Pagination features:
 
-- **Intelligente Seitennummerierung** - Zeigt erste und letzte Seite, plus ein Fenster um die aktuelle Seite herum
-- **Ellipsis** bei vielen Seiten (1 ... 10 11 **12** 13 14 ... 23)
-- **Neuere/Ältere Buttons** für schnelle Navigation
-- **Pretty URLs** - `/page/2`, `/page/3`, etc.
-- SEO-freundlich: `/page/1` wird automatisch auf `/` umgeleitet (301)
+- **Smart page numbering** — Shows first and last page, plus a window around the current page
+- **Ellipsis** for many pages (1 ... 10 11 **12** 13 14 ... 23)
+- **Newer/Older buttons** for quick navigation
+- **Pretty URLs** — `/page/2`, `/page/3`, etc.
+- SEO-friendly: `/page/1` automatically redirects to `/` (301)
 
-### Tags und Kategorien
+### Tags and Categories
 
-QuillDrop unterstützt sowohl Tags als auch Kategorien zur Strukturierung von Inhalten:
+QuillDrop supports both tags and categories for content organization:
 
-- **Tag-Übersicht** unter `/tags/` mit Anzahl der Posts pro Tag
-- **Tag-Seiten** unter `/tags/kubernetes/` mit allen Posts eines Tags
-- **Kategorie-Übersicht** unter `/categories/` mit Anzahl der Posts pro Kategorie
-- **Kategorie-Seiten** unter `/categories/technik/` mit allen Posts einer Kategorie
-- **Tag- und Kategorie-Badges** auf Post-Cards und Einzelseiten
-- Tags und Kategorien werden aus dem YAML-Frontmatter (`tags`, `categories`) ausgelesen
+- **Tag overview** at `/tags/` with post count per tag
+- **Tag pages** at `/tags/kubernetes/` with all posts for a tag
+- **Category overview** at `/categories/` with post count per category
+- **Category pages** at `/categories/tech/` with all posts in a category
+- **Tag and category badges** on post cards and detail pages
+- Tags and categories are read from YAML frontmatter (`tags`, `categories`)
 
-### Volltextsuche
+### Full-Text Search
 
-QuillDrop enthält eine integrierte Client-seitige Suche, die komplett ohne Backend auskommt:
+QuillDrop includes an integrated client-side search that works entirely without a backend:
 
-- **Suchindex** — Beim Generieren wird eine `search-index.json` mit allen Posts erstellt
-- **Lazy Loading** — Der Suchindex wird erst beim ersten Öffnen der Suche geladen
-- **Multi-Term-Suche** — Mehrere Suchbegriffe werden mit UND verknüpft
-- **Felder** — Durchsucht Titel, Vorschau, Tags und Kategorien
-- **Keyboard-Shortcut** — `Ctrl+K` / `Cmd+K` öffnet die Suche
-- **Lupe in der Navbar** — Klick auf das Such-Icon öffnet das Suchfeld
-- **Debounce** — Suchergebnisse erscheinen nach 200ms Tippverzögerung
-- **Maximal 8 Treffer** mit Highlighting der Suchbegriffe
-- **Escape** oder Klick außerhalb schließt die Suche
-- Kein externer Dienst, kein Framework — reines Vanilla JavaScript
+- **Search index** — A `search-index.json` with all posts is generated during build
+- **Lazy loading** — The search index is only loaded when the search is first opened
+- **Multi-term search** — Multiple search terms are combined with AND
+- **Fields** — Searches title, preview, tags, and categories
+- **Keyboard shortcut** — `Ctrl+K` / `Cmd+K` opens the search
+- **Magnifying glass in the navbar** — Click the search icon to open the search field
+- **Debounce** — Search results appear after 200ms typing delay
+- **Maximum 8 results** with highlighting of search terms
+- **Escape** or click outside closes the search
+- No external service, no framework — pure vanilla JavaScript
 
-### Artikel-Navigation
+### Article Navigation
 
-Am Ende jedes Blog-Posts wird eine Navigation zum vorherigen und nächsten Artikel angezeigt:
+At the end of each blog post, navigation to the previous and next article is displayed:
 
-- **Neuerer Artikel** (← links) — Verlinkt zum chronologisch neueren Post
-- **Älterer Artikel** (→ rechts) — Verlinkt zum chronologisch älteren Post
-- Beim neuesten Artikel wird nur "Älterer Artikel" angezeigt
-- Beim ältesten Artikel wird nur "Neuerer Artikel" angezeigt
-- Zeigt jeweils den Titel des verlinkten Artikels an
+- **Newer article** (← left) — Links to the chronologically newer post
+- **Older article** (→ right) — Links to the chronologically older post
+- On the newest article, only "Older article" is shown
+- On the oldest article, only "Newer article" is shown
+- Displays the title of the linked article
 
-### Inhaltsverzeichnis (Table of Contents)
+### Table of Contents
 
-Posts können ein automatisch generiertes Inhaltsverzeichnis aktivieren:
+Posts can activate an automatically generated table of contents:
 
-- Aktivierung über `toc: true` im Frontmatter
-- Unterstützt **H1, H2 und H3** Überschriften
-- **Relative Einrückung** — Das TOC erkennt die minimale Heading-Ebene und rückt relativ dazu ein
-- Automatische Anchor-Links zu den jeweiligen Überschriften
-- Wird client-seitig generiert für schnelle Seitenladezeit
+- Enabled via `toc: true` in the frontmatter
+- Supports **H1, H2, and H3** headings
+- **Relative indentation** — The TOC detects the minimum heading level and indents relative to it
+- Automatic anchor links to the respective headings
+- Generated client-side for fast page load times
 
-### Statische Seiten
+### Static Pages
 
-Neben Blog-Posts unterstützt QuillDrop statische Seiten für:
+In addition to blog posts, QuillDrop supports static pages for:
 
-- Impressum, Datenschutzerklärung
-- Über mich / About
-- Projektseiten (mit Unterseiten)
-- Beliebige weitere Seiten
+- Legal notice, privacy policy
+- About me / About
+- Project pages (with subpages)
+- Any additional pages
 
-Seiten werden als Markdown-Dateien im `sites/`-Verzeichnis abgelegt. Verschachtelte Verzeichnisse werden automatisch erkannt - z.B. wird `sites/projekte/vm-tracker/index.md` unter `/sites/projekte/vm-tracker` erreichbar.
+Pages are stored as Markdown files in the `sites/` directory. Nested directories are automatically recognized — e.g., `sites/projects/vm-tracker/index.md` becomes accessible at `/sites/projects/vm-tracker`.
 
 ### RSS Feed
 
-Automatisch generierter RSS 2.0 Feed unter `/index.xml` mit:
+Automatically generated RSS 2.0 feed at `/index.xml` with:
 
-- Den letzten 20 Posts
-- Titel, Link, Vorschau und Veröffentlichungsdatum
-- RSS-Autodiscovery im HTML-Head
-- RSS-Icon in der Navigation
-- URL `/index.xml` für Kompatibilität mit bestehenden Blog-Setups
+- The latest 20 posts
+- Title, link, preview, and publication date
+- RSS autodiscovery in the HTML head
+- RSS icon in the navigation
+- URL `/index.xml` for compatibility with existing blog setups
 
-### Cover-Bilder
+### Cover Images
 
-Posts können ein Cover-Bild definieren, das sowohl auf der Startseite (als Post-Card) als auch auf der Einzelansicht angezeigt wird:
+Posts can define a cover image that is displayed both on the homepage (as a post card) and on the detail view:
 
-- **21:9 Aspect Ratio** auf Post-Cards mit Zoom-on-Hover Effekt
-- **Volle Breite** auf der Einzelpost-Seite
-- **Lazy Loading** für optimale Performance
-- **Fallback** von `cover` auf `featureImage`
+- **21:9 aspect ratio** on post cards with zoom-on-hover effect
+- **Full width** on the single post page
+- **Lazy loading** for optimal performance
+- **Fallback** from `cover` to `featureImage`
 
-## Architektur
+## Architecture
 
-### Projektstruktur
+### Project Structure
 
 ```
 quilldrop/
-├── main.go                          # CLI Entry Point
-├── config.yaml                      # Konfiguration
-├── content/                         # Blog-Posts (Markdown)
-│   ├── 2025-11-06-mein-post.md
+├── main.go                          # CLI entry point
+├── config.yaml                      # Configuration
+├── content/                         # Blog posts (Markdown)
+│   ├── 2025-11-06-my-post.md
 │   └── ...
-├── sites/                           # Statische Seiten
-│   ├── ueber-mich.md
-│   ├── impressum.md
-│   └── projekte/
-│       └── mein-projekt/
+├── sites/                           # Static pages
+│   ├── about.md
+│   ├── legal.md
+│   └── projects/
+│       └── my-project/
 │           └── index.md
-├── static/                          # Statische Assets
+├── static/                          # Static assets
 │   ├── css/style.css
 │   ├── js/
-│   │   ├── theme.js                 # Dark/Light Toggle + TOC Generator
-│   │   └── search.js                # Client-seitige Volltextsuche
+│   │   ├── theme.js                 # Dark/Light toggle + TOC generator
+│   │   └── search.js                # Client-side full-text search
 │   └── images/
 ├── internal/
-│   ├── config/config.go             # YAML Config Loader
+│   ├── config/config.go             # YAML config loader
 │   ├── content/
-│   │   ├── post.go                  # Post Struct + FlexTime + Tags/Categories
-│   │   ├── parser.go                # Markdown + Frontmatter Parser
-│   │   └── page.go                  # Statische Seiten Parser
-│   ├── server/server.go             # HTTP Server
+│   │   ├── post.go                  # Post struct + FlexTime + Tags/Categories
+│   │   ├── parser.go                # Markdown + frontmatter parser
+│   │   └── page.go                  # Static pages parser
+│   ├── server/server.go             # HTTP server
 │   ├── generator/
-│   │   ├── generator.go             # Static Site Generator
-│   │   └── search.go                # Search-Index Generator (JSON)
+│   │   ├── generator.go             # Static site generator
+│   │   └── search.go                # Search index generator (JSON)
 │   └── templates/
-│       ├── render.go                # Template Engine + Functions
-│       ├── rss.go                   # RSS Feed Generator
-│       ├── base.html                # Base Layout + Navbar + Suche
-│       ├── home.html                # Homepage + Pagination
-│       ├── post.html                # Einzelner Post + Prev/Next Navigation
-│       ├── page.html                # Statische Seite
-│       ├── tags.html                # Tag-Übersicht
-│       ├── tag.html                 # Tag-Seite
-│       ├── categories.html          # Kategorie-Übersicht
-│       └── category.html            # Kategorie-Seite
-└── output/                          # Generierte statische Dateien
+│       ├── render.go                # Template engine + functions
+│       ├── rss.go                   # RSS feed generator
+│       ├── base.html                # Base layout + navbar + search
+│       ├── home.html                # Homepage + pagination
+│       ├── post.html                # Single post + prev/next navigation
+│       ├── page.html                # Static page
+│       ├── tags.html                # Tag overview
+│       ├── tag.html                 # Tag page
+│       ├── categories.html          # Category overview
+│       └── category.html            # Category page
+└── output/                          # Generated static files
 ```
 
-### Technologie-Stack
+### Technology Stack
 
-| Komponente | Technologie |
-|-----------|-------------|
-| Sprache | Go (Standard Library + minimale Dependencies) |
-| HTTP Server | `net/http` (Go Standard Library) |
-| Templates | `html/template` mit `embed.FS` |
+| Component | Technology |
+|-----------|------------|
+| Language | Go (standard library + minimal dependencies) |
+| HTTP Server | `net/http` (Go standard library) |
+| Templates | `html/template` with `embed.FS` |
 | Markdown | Goldmark + GFM + Emoji + Chroma |
-| Konfiguration | YAML via `gopkg.in/yaml.v3` |
-| Syntax Highlighting | Chroma (Dracula Theme) |
+| Configuration | YAML via `gopkg.in/yaml.v3` |
+| Syntax Highlighting | Chroma (Dracula theme) |
 | Fonts | Inter + JetBrains Mono (Google Fonts) |
-| CSS | Vanilla CSS mit Custom Properties |
-| JavaScript | Vanilla JS — Theme Toggle, Suche, TOC (kein Framework) |
+| CSS | Vanilla CSS with custom properties |
+| JavaScript | Vanilla JS — theme toggle, search, TOC (no framework) |
 
 ### Dependencies
 
-QuillDrop hat bewusst minimale Abhängigkeiten - **kein Web-Framework**, **kein CSS-Framework**, **kein JS-Framework**:
+QuillDrop intentionally has minimal dependencies — **no web framework**, **no CSS framework**, **no JS framework**:
 
-- `github.com/yuin/goldmark` - Markdown Parser (CommonMark-konform)
-- `github.com/yuin/goldmark-emoji` - Emoji Shortcodes
-- `github.com/yuin/goldmark-highlighting/v2` - Syntax Highlighting
-- `github.com/alecthomas/chroma/v2` - Syntax Highlighting Engine
-- `gopkg.in/yaml.v3` - YAML Parser
+- `github.com/yuin/goldmark` — Markdown parser (CommonMark compliant)
+- `github.com/yuin/goldmark-emoji` — Emoji shortcodes
+- `github.com/yuin/goldmark-highlighting/v2` — Syntax highlighting
+- `github.com/alecthomas/chroma/v2` — Syntax highlighting engine
+- `gopkg.in/yaml.v3` — YAML parser
 
 ### Embedded Assets
 
-Alle HTML-Templates werden via Go's `//go:embed` Directive direkt in das Binary eingebettet. Das bedeutet:
+All HTML templates are embedded directly into the binary via Go's `//go:embed` directive. This means:
 
-- **Einzelnes Binary** - Keine externen Template-Dateien nötig
-- **Schneller Start** - Kein Dateisystem-Zugriff für Templates
-- **Einfaches Deployment** - Ein Binary + Config + Content = fertig
+- **Single binary** — No external template files needed
+- **Fast startup** — No filesystem access for templates
+- **Easy deployment** — One binary + config + content = done
 
-## Konfiguration
+## Configuration
 
-Die gesamte Konfiguration erfolgt über eine einzige `config.yaml`:
+All configuration is done via a single `config.yaml`:
 
 ```yaml
-title: "Mein Blog"
+title: "My Blog"
 description: "Tech Blog - DevOps, Kubernetes, Self-Hosted"
-author: "Max Mustermann"
-baseURL: "https://mein-blog.de"
+author: "Jane Doe"
+baseURL: "https://my-blog.com"
 port: 8080
 postsPerPage: 5
 contentDir: "content"
@@ -289,118 +291,118 @@ menu:
     url: "/"
   - label: "Tags"
     url: "/tags"
-  - label: "Über mich"
-    url: "/sites/ueber-mich"
+  - label: "About"
+    url: "/sites/about"
 ```
 
-| Option | Default | Beschreibung |
+| Option | Default | Description |
 |--------|---------|-------------|
-| `title` | - | Titel der Website |
-| `description` | - | Beschreibung (Meta-Tag + Hero) |
-| `author` | - | Autor der Website |
-| `baseURL` | - | Basis-URL für RSS und absolute Links |
-| `port` | `8080` | Port für den dynamischen Server |
-| `postsPerPage` | `5` | Anzahl Posts pro Seite |
-| `contentDir` | `content` | Verzeichnis für Blog-Posts |
-| `sitesDir` | `sites` | Verzeichnis für statische Seiten |
-| `outputDir` | `output` | Ausgabeverzeichnis für statische Generierung |
-| `menu` | `[]` | Navigationsmenü mit optionalen Untermenüs |
+| `title` | — | Website title |
+| `description` | — | Description (meta tag + hero) |
+| `author` | — | Website author |
+| `baseURL` | — | Base URL for RSS and absolute links |
+| `port` | `8080` | Port for the dynamic server |
+| `postsPerPage` | `5` | Number of posts per page |
+| `contentDir` | `content` | Directory for blog posts |
+| `sitesDir` | `sites` | Directory for static pages |
+| `outputDir` | `output` | Output directory for static generation |
+| `menu` | `[]` | Navigation menu with optional submenus |
 
-## Schnellstart
+## Quick Start
 
 ### Installation
 
 ```bash
-# Repository klonen
+# Clone the repository
 git clone https://github.com/ruedigerp/quilldrop.git
 cd quilldrop
 
-# Dependencies laden
+# Download dependencies
 go mod download
 
-# Binary bauen
+# Build the binary
 go build -o quilldrop .
 ```
 
-### Neuen Post erstellen
+### Create a New Post
 
-Eine neue Markdown-Datei im `content/`-Verzeichnis anlegen:
+Create a new Markdown file in the `content/` directory:
 
 ```bash
-touch content/2025-12-01-mein-erster-post.md
+touch content/2025-12-01-my-first-post.md
 ```
 
 ```markdown
 ---
-title: "Mein erster Post"
+title: "My First Post"
 date: 2025-12-01 10:00:00
-author: "Max Mustermann"
+author: "Jane Doe"
 tags: [Blog, QuillDrop]
-preview: "Das ist mein erster Post mit QuillDrop!"
+preview: "This is my first post with QuillDrop!"
 toc: false
 ---
 
-# Willkommen
+# Welcome
 
-Das ist mein erster Post mit **QuillDrop**.
+This is my first post with **QuillDrop**.
 
 ```
 
-### Lokale Vorschau
+### Local Preview
 
 ```bash
-# Dynamischen Server starten
+# Start the dynamic server
 ./quilldrop serve
 
-# Oder direkt mit Go
+# Or run directly with Go
 go run . serve
 ```
 
-Dann im Browser: [http://localhost:8080](http://localhost:8080)
+Then open in the browser: [http://localhost:8080](http://localhost:8080)
 
-### Statische Seite generieren
+### Generate Static Site
 
 ```bash
-# HTML-Dateien generieren
+# Generate HTML files
 ./quilldrop generate
 
-# Generierte Dateien befinden sich in output/
+# Generated files are in output/
 ls output/
 ```
 
-Die generierten Dateien im `output/`-Verzeichnis können direkt auf einen Webserver (Nginx, Apache, Caddy) oder CDN deployed werden.
+The generated files in the `output/` directory can be deployed directly to a web server (Nginx, Apache, Caddy) or CDN.
 
-## URL-Schema
+## URL Schema
 
-Alle URLs verwenden konsequent Trailing Slashes, um serverseitige Redirects zu vermeiden:
+All URLs consistently use trailing slashes to avoid server-side redirects:
 
-| URL | Beschreibung |
+| URL | Description |
 |-----|-------------|
-| `/` | Startseite (letzte N Posts) |
-| `/page/2/` | Seite 2 der Post-Liste |
-| `/posts/2025-11-06-mein-post/` | Einzelner Blog-Post |
-| `/tags/` | Tag-Übersicht |
-| `/tags/kubernetes/` | Posts mit Tag "Kubernetes" |
-| `/categories/` | Kategorie-Übersicht |
-| `/categories/technik/` | Posts in Kategorie "Technik" |
-| `/sites/ueber-mich/` | Statische Seite |
-| `/sites/projekte/vm-tracker/` | Verschachtelte Projektseite |
-| `/index.xml` | RSS Feed |
-| `/search-index.json` | Suchindex (JSON) |
-| `/static/css/style.css` | Statische Assets |
-| `/images/posts/2025/11/cover.webp` | Bilder |
+| `/` | Homepage (latest N posts) |
+| `/page/2/` | Page 2 of the post list |
+| `/posts/2025-11-06-my-post/` | Single blog post |
+| `/tags/` | Tag overview |
+| `/tags/kubernetes/` | Posts with tag "Kubernetes" |
+| `/categories/` | Category overview |
+| `/categories/tech/` | Posts in category "Tech" |
+| `/sites/about/` | Static page |
+| `/sites/projects/vm-tracker/` | Nested project page |
+| `/index.xml` | RSS feed |
+| `/search-index.json` | Search index (JSON) |
+| `/static/css/style.css` | Static assets |
+| `/images/posts/2025/11/cover.webp` | Images |
 
-## Warum QuillDrop?
+## Why QuillDrop?
 
-- **Keine Datenbank** - Dateisystem als einzige Datenquelle
-- **Keine Build-Pipeline** - Ein `go build` und fertig
-- **Keine JS-Frameworks** - Vanilla JavaScript für Theme, Suche und TOC
-- **Minimale Dependencies** - 5 Go-Packages, alle fokussiert auf Markdown
-- **Blitzschnell** - Generiert 100+ Posts in unter 3 Sekunden
-- **Einzelnes Binary** - Templates eingebettet, kein Runtime-Setup
-- **Hugo-kompatibel** - Bestehende Hugo-Posts mit Frontmatter funktionieren
-- **Dual-Mode** - Entwicklung mit Server, Produktion mit Static Generator
+- **No database** — The filesystem is the only data source
+- **No build pipeline** — A single `go build` and you're done
+- **No JS frameworks** — Vanilla JavaScript for theme, search, and TOC
+- **Minimal dependencies** — 5 Go packages, all focused on Markdown
+- **Blazing fast** — Generates 100+ posts in under 3 seconds
+- **Single binary** — Templates embedded, no runtime setup needed
+- **Hugo compatible** — Existing Hugo posts with frontmatter just work
+- **Dual-mode** — Development with server, production with static generator
 
-## Lizenz
+## License
 
-QuillDrop ist Open Source.
+QuillDrop is open source.
