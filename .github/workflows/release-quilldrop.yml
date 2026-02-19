@@ -11,6 +11,8 @@ permissions:
   contents: write
   packages: write
   id-token: write
+  issues: write
+  pull-requests: write
 
 env:
   # Hier kannst du einen Default-Name definieren, der in die Artefakte wandert
