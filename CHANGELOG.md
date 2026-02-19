@@ -1,3 +1,10 @@
+## [1.2.9](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.8...v1.2.9) (2026-02-19)
+
+
+### Bug Fixes
+
+* update permissions to include issues and pull-requests [skip ci] ([8a85933](https://github.com/9IT-Full-Service/quilldrop/commit/8a85933eb91202cf12ae75a3674674c278b049e9))
+
 ## [1.2.8](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.7...v1.2.8) (2026-02-19)
 
 
