@@ -75,8 +75,9 @@ Das mitgelieferte Theme bietet:
 - **Theme Toggle** mit localStorage-Persistenz (bleibt nach Reload erhalten)
 - **Futuristisches Design** - Dunkle Hintergrunde, Cyan-Akzente, subtile Glow-Effekte
 - **Responsive Layout** - Mobile-first, optimiert für alle Bildschirmgrößen
-- **Hamburger-Navigation** auf mobilen Geräten mit Fullscreen-Overlay
-- **Dropdown-Menus** für verschachtelte Navigation
+- **Hamburger-Navigation** auf mobilen Geräten mit Fullscreen-Overlay und eigenem Stacking Context
+- **Dropdown-Menus** für verschachtelte Navigation (Touch-optimiert auf Mobile)
+- **Integrierte Suche** — Lupe in der Navbar mit Ctrl+K Shortcut
 - **Typographie** - Inter als Textfont, JetBrains Mono für Code und Metadaten
 
 ### Navigation und Menü
@@ -115,9 +116,49 @@ Die Startseite zeigt eine konfigurierbare Anzahl von Posts pro Seite (Standard: 
 
 ### Tags und Kategorien
 
-- **Tag-Übersicht** unter `/tags` mit Anzahl der Posts pro Tag
-- **Tag-Seiten** unter `/tags/kubernetes` mit allen Posts eines Tags
-- **Tag-Badges** auf Post-Cards und Einzelseiten
+QuillDrop unterstützt sowohl Tags als auch Kategorien zur Strukturierung von Inhalten:
+
+- **Tag-Übersicht** unter `/tags/` mit Anzahl der Posts pro Tag
+- **Tag-Seiten** unter `/tags/kubernetes/` mit allen Posts eines Tags
+- **Kategorie-Übersicht** unter `/categories/` mit Anzahl der Posts pro Kategorie
+- **Kategorie-Seiten** unter `/categories/technik/` mit allen Posts einer Kategorie
+- **Tag- und Kategorie-Badges** auf Post-Cards und Einzelseiten
+- Tags und Kategorien werden aus dem YAML-Frontmatter (`tags`, `categories`) ausgelesen
+
+### Volltextsuche
+
+QuillDrop enthält eine integrierte Client-seitige Suche, die komplett ohne Backend auskommt:
+
+- **Suchindex** — Beim Generieren wird eine `search-index.json` mit allen Posts erstellt
+- **Lazy Loading** — Der Suchindex wird erst beim ersten Öffnen der Suche geladen
+- **Multi-Term-Suche** — Mehrere Suchbegriffe werden mit UND verknüpft
+- **Felder** — Durchsucht Titel, Vorschau, Tags und Kategorien
+- **Keyboard-Shortcut** — `Ctrl+K` / `Cmd+K` öffnet die Suche
+- **Lupe in der Navbar** — Klick auf das Such-Icon öffnet das Suchfeld
+- **Debounce** — Suchergebnisse erscheinen nach 200ms Tippverzögerung
+- **Maximal 8 Treffer** mit Highlighting der Suchbegriffe
+- **Escape** oder Klick außerhalb schließt die Suche
+- Kein externer Dienst, kein Framework — reines Vanilla JavaScript
+
+### Artikel-Navigation
+
+Am Ende jedes Blog-Posts wird eine Navigation zum vorherigen und nächsten Artikel angezeigt:
+
+- **Neuerer Artikel** (← links) — Verlinkt zum chronologisch neueren Post
+- **Älterer Artikel** (→ rechts) — Verlinkt zum chronologisch älteren Post
+- Beim neuesten Artikel wird nur "Älterer Artikel" angezeigt
+- Beim ältesten Artikel wird nur "Neuerer Artikel" angezeigt
+- Zeigt jeweils den Titel des verlinkten Artikels an
+
+### Inhaltsverzeichnis (Table of Contents)
+
+Posts können ein automatisch generiertes Inhaltsverzeichnis aktivieren:
+
+- Aktivierung über `toc: true` im Frontmatter
+- Unterstützt **H1, H2 und H3** Überschriften
+- **Relative Einrückung** — Das TOC erkennt die minimale Heading-Ebene und rückt relativ dazu ein
+- Automatische Anchor-Links zu den jeweiligen Überschriften
+- Wird client-seitig generiert für schnelle Seitenladezeit
 
 ### Statische Seiten
 
@@ -132,12 +173,13 @@ Seiten werden als Markdown-Dateien im `sites/`-Verzeichnis abgelegt. Verschachte
 
 ### RSS Feed
 
-Automatisch generierter RSS 2.0 Feed unter `/feed.xml` mit:
+Automatisch generierter RSS 2.0 Feed unter `/index.xml` mit:
 
 - Den letzten 20 Posts
 - Titel, Link, Vorschau und Veröffentlichungsdatum
 - RSS-Autodiscovery im HTML-Head
 - RSS-Icon in der Navigation
+- URL `/index.xml` für Kompatibilität mit bestehenden Blog-Setups
 
 ### Cover-Bilder
 
@@ -167,25 +209,31 @@ quilldrop/
 │           └── index.md
 ├── static/                          # Statische Assets
 │   ├── css/style.css
-│   ├── js/theme.js
+│   ├── js/
+│   │   ├── theme.js                 # Dark/Light Toggle + TOC Generator
+│   │   └── search.js                # Client-seitige Volltextsuche
 │   └── images/
 ├── internal/
 │   ├── config/config.go             # YAML Config Loader
 │   ├── content/
-│   │   ├── post.go                  # Post Struct + FlexTime
+│   │   ├── post.go                  # Post Struct + FlexTime + Tags/Categories
 │   │   ├── parser.go                # Markdown + Frontmatter Parser
 │   │   └── page.go                  # Statische Seiten Parser
 │   ├── server/server.go             # HTTP Server
-│   ├── generator/generator.go       # Static Site Generator
+│   ├── generator/
+│   │   ├── generator.go             # Static Site Generator
+│   │   └── search.go                # Search-Index Generator (JSON)
 │   └── templates/
 │       ├── render.go                # Template Engine + Functions
 │       ├── rss.go                   # RSS Feed Generator
-│       ├── base.html                # Base Layout
+│       ├── base.html                # Base Layout + Navbar + Suche
 │       ├── home.html                # Homepage + Pagination
-│       ├── post.html                # Einzelner Post
+│       ├── post.html                # Einzelner Post + Prev/Next Navigation
 │       ├── page.html                # Statische Seite
 │       ├── tags.html                # Tag-Übersicht
-│       └── tag.html                 # Tag-Seite
+│       ├── tag.html                 # Tag-Seite
+│       ├── categories.html          # Kategorie-Übersicht
+│       └── category.html            # Kategorie-Seite
 └── output/                          # Generierte statische Dateien
 ```
 
@@ -201,7 +249,7 @@ quilldrop/
 | Syntax Highlighting | Chroma (Dracula Theme) |
 | Fonts | Inter + JetBrains Mono (Google Fonts) |
 | CSS | Vanilla CSS mit Custom Properties |
-| JavaScript | Vanilla JS (kein Framework) |
+| JavaScript | Vanilla JS — Theme Toggle, Suche, TOC (kein Framework) |
 
 ### Dependencies
 
@@ -324,16 +372,21 @@ Die generierten Dateien im `output/`-Verzeichnis können direkt auf einen Webser
 
 ## URL-Schema
 
+Alle URLs verwenden konsequent Trailing Slashes, um serverseitige Redirects zu vermeiden:
+
 | URL | Beschreibung |
 |-----|-------------|
 | `/` | Startseite (letzte N Posts) |
-| `/page/2` | Seite 2 der Post-Liste |
-| `/posts/2025-11-06-mein-post` | Einzelner Blog-Post |
-| `/tags` | Tag-Übersicht |
-| `/tags/kubernetes` | Posts mit Tag "Kubernetes" |
-| `/sites/ueber-mich` | Statische Seite |
-| `/sites/projekte/vm-tracker` | Verschachtelte Projektseite |
-| `/feed.xml` | RSS Feed |
+| `/page/2/` | Seite 2 der Post-Liste |
+| `/posts/2025-11-06-mein-post/` | Einzelner Blog-Post |
+| `/tags/` | Tag-Übersicht |
+| `/tags/kubernetes/` | Posts mit Tag "Kubernetes" |
+| `/categories/` | Kategorie-Übersicht |
+| `/categories/technik/` | Posts in Kategorie "Technik" |
+| `/sites/ueber-mich/` | Statische Seite |
+| `/sites/projekte/vm-tracker/` | Verschachtelte Projektseite |
+| `/index.xml` | RSS Feed |
+| `/search-index.json` | Suchindex (JSON) |
 | `/static/css/style.css` | Statische Assets |
 | `/images/posts/2025/11/cover.webp` | Bilder |
 
@@ -341,7 +394,7 @@ Die generierten Dateien im `output/`-Verzeichnis können direkt auf einen Webser
 
 - **Keine Datenbank** - Dateisystem als einzige Datenquelle
 - **Keine Build-Pipeline** - Ein `go build` und fertig
-- **Keine JS-Frameworks** - Vanilla JavaScript, unter 90 Zeilen
+- **Keine JS-Frameworks** - Vanilla JavaScript für Theme, Suche und TOC
 - **Minimale Dependencies** - 5 Go-Packages, alle fokussiert auf Markdown
 - **Blitzschnell** - Generiert 100+ Posts in unter 3 Sekunden
 - **Einzelnes Binary** - Templates eingebettet, kein Runtime-Setup
