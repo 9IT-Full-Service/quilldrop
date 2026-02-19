@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.7...v1.1.8) (2026-02-19)
+
+
+### Bug Fixes
+
+* burger menu z-index problem ([69e00d6](https://github.com/9IT-Full-Service/quilldrop/commit/69e00d6de9df5cc4418a4304dc07fa2d4917595a))
+
 ## [1.1.7](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.6...v1.1.7) (2026-02-19)
 
 
