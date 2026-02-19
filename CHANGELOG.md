@@ -1,3 +1,10 @@
+## [1.1.10](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.9...v1.1.10) (2026-02-19)
+
+
+### Bug Fixes
+
+* quilldrop build in dockerfile ([b74c3cf](https://github.com/9IT-Full-Service/quilldrop/commit/b74c3cfc9a2ceda79c599c6095245ae0853ae9cc))
+
 ## [1.1.9](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.8...v1.1.9) (2026-02-19)
 
 
