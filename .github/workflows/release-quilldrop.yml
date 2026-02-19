@@ -65,7 +65,7 @@ jobs:
       default_version: 'dev'
 
   build:
-    runs-on: [ arc-runner-set-arm64 ]
+    runs-on: [ arc-runner-set ]
     # runs-on: [ self-hosted ]
     needs: [ "create-version-tag" ]
     strategy:
@@ -196,7 +196,8 @@ jobs:
 
   release:
     needs: [ "build", "create-version-tag" ]
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set
+    # runs-on: [ self-hosted ]
     steps:
       - name: Download all build artifacts (merged)
         uses: actions/download-artifact@v6
