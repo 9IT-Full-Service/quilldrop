@@ -1096,8 +1096,25 @@ body {
 
 /* === Responsive === */
 @media (max-width: 768px) {
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        background: var(--bg-primary);
+    }
+
+    body {
+        padding-top: 3.5rem;
+    }
+
     .hamburger {
         display: flex;
+        position: relative;
+        z-index: 1020;
     }
 
     .nav-links {
@@ -1105,16 +1122,14 @@ body {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
+        width: 100%;
+        height: 100%;
         background: var(--bg-primary);
-        opacity: 1;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        gap: 1.5rem;
+        gap: 1.2rem;
         padding: 5rem 2rem 2rem;
-        z-index: 105;
+        z-index: 1010;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
@@ -1124,9 +1139,16 @@ body {
     }
 
     .nav-links > a,
-    .nav-dropdown-toggle {
-        font-size: 1.2rem;
+    .nav-links > .nav-dropdown > .nav-dropdown-toggle {
+        font-size: 1.15rem;
         color: var(--text-primary);
+        display: block;
+        text-align: center;
+        padding: 0.3rem 0;
+    }
+
+    .nav-dropdown {
+        text-align: center;
     }
 
     .nav-dropdown-menu {
@@ -1150,7 +1172,7 @@ body {
 
     .nav-dropdown-menu a {
         padding: 0.4rem 0;
-        font-size: 1rem;
+        font-size: 0.95rem;
         color: var(--text-secondary);
     }
 
@@ -1161,20 +1183,28 @@ body {
 
     .search-box {
         position: fixed;
-        top: 4.5rem;
+        top: 5rem;
         left: 1rem;
         right: 1rem;
         width: auto;
-        z-index: 110;
+        z-index: 1015;
     }
 
     .search-results {
         max-height: calc(100vh - 10rem);
     }
 
-    .nav-rss,
+    .nav-rss {
+        color: var(--text-primary);
+    }
+
+    .nav-rss svg {
+        fill: var(--text-primary);
+    }
+
     #theme-toggle {
         color: var(--text-primary);
+        border-color: var(--text-muted);
     }
 }
 

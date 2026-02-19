@@ -12,6 +12,13 @@ build:
 docker-static:
 	podman build --platform linux/arm64 -t quilldrop -f ./Dockerfile-static .
 
+docker-images:
+	$(eval LATEST_TAG := $(shell git tag --sort=-version:refname | head -n 1))
+	podman build --platform linux/amd64,linux/arm64 \
+		--manifest ghcr.io/9it-full-service/quilldrop:$(LATEST_TAG)-images \
+		-f ./Dockerfile-images .
+	podman manifest push --all ghcr.io/9it-full-service/quilldrop:$(LATEST_TAG)-images
+	
 docker-run:
 	podman run --rm -i -p 8081:80 quilldrop:latest
 

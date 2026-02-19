@@ -4,10 +4,4 @@ WORKDIR /app
 
 COPY ./static/images /usr/share/nginx/html/images
 
-# RUN ./quilldrop generate
-
-# FROM --platform=$BUILDPLATFORM nginx
-
-# COPY --from=builder /app/output /usr/share/nginx/html
-
 EXPOSE 80
