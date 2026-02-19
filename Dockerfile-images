@@ -2,7 +2,7 @@ FROM --platform=$BUILDPLATFORM nginx
 
 WORKDIR /app
 
-COPY static/images /usr/share/nginx/html/images
+COPY ./static/images /usr/share/nginx/html/images
 
 # RUN ./quilldrop generate
 
