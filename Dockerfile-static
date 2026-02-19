@@ -2,7 +2,7 @@ FROM --platform=$BUILDPLATFORM nginx AS builder
 
 WORKDIR /app
 
-COPY . .
+COPY --exclude=static/images . .
 
 RUN ./quilldrop generate
 
