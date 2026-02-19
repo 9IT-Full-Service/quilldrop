@@ -130,7 +130,7 @@ jobs:
           (cd . && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w \
           -X 'main.version=${VERSION}' \
           -X 'main.commit=${COMMIT}' \
-          -X 'main.date=${BUILD_TIMESTAMP}'" -o "../${OUT}")
+          -X 'main.date=${BUILD_TIMESTAMP}'" -o "${OUT}")
           # go mod init quilldrop && go mod tidy && \
           go mod tidy && \
           # CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
@@ -146,29 +146,29 @@ jobs:
             (cd dist && tar -czf "${BIN_NAME}.tar.gz" "${BIN_NAME}")
           fi
 
-      - name: Build vm-tracker-client
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-          VERSION: ${{ needs.create-version-tag.outputs.version }}  # ← hinzufügen
-          COMMIT: ${{ github.sha }}                                  # ← hinzufügen
-          # BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
-          BUILD_TIMESTAMP: $(date -u +%Y-%m-%dT%H:%M:%SZ)
-        run: |
-          set -euo pipefail
-          mkdir -p dist
-          BIN_NAME="quilldrop-${GOOS}-${GOARCH}"
-          OUT="dist/${BIN_NAME}"
-          if [ "${GOOS}" = "windows" ]; then OUT="${OUT}.exe"; fi
-          (cd . && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w \
-          -X 'main.version=${VERSION}' \
-          -X 'main.commit=${COMMIT}' \
-          -X 'main.date=${BUILD_TIMESTAMP}'" -o "../${OUT}")
-          if [[ "${OUT}" == *.exe ]]; then
-            (cd dist && zip "${BIN_NAME}.zip" "${BIN_NAME}.exe")
-          else
-            (cd dist && tar -czf "${BIN_NAME}.tar.gz" "${BIN_NAME}")
-          fi
+      # - name: Build vm-tracker-client
+      #   env:
+      #     GOOS: ${{ matrix.goos }}
+      #     GOARCH: ${{ matrix.goarch }}
+      #     VERSION: ${{ needs.create-version-tag.outputs.version }}  # ← hinzufügen
+      #     COMMIT: ${{ github.sha }}                                  # ← hinzufügen
+      #     # BUILD_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+      #     BUILD_TIMESTAMP: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+      #   run: |
+      #     set -euo pipefail
+      #     mkdir -p dist
+      #     BIN_NAME="quilldrop-${GOOS}-${GOARCH}"
+      #     OUT="dist/${BIN_NAME}"
+      #     if [ "${GOOS}" = "windows" ]; then OUT="${OUT}.exe"; fi
+      #     (cd . && CGO_ENABLED=0 go build -trimpath -ldflags="-s -w \
+      #     -X 'main.version=${VERSION}' \
+      #     -X 'main.commit=${COMMIT}' \
+      #     -X 'main.date=${BUILD_TIMESTAMP}'" -o "../${OUT}")
+      #     if [[ "${OUT}" == *.exe ]]; then
+      #       (cd dist && zip "${BIN_NAME}.zip" "${BIN_NAME}.exe")
+      #     else
+      #       (cd dist && tar -czf "${BIN_NAME}.tar.gz" "${BIN_NAME}")
+      #     fi
 
       - name: Checksums erzeugen
         run: |
