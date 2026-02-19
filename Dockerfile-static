@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM nginx AS builder
+FROM --platform=$TARGETPLATFORM nginx AS builder
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY --exclude=static/images . .
 
 RUN ./quilldrop generate
 
-FROM --platform=$BUILDPLATFORM nginx
+FROM --platform=$TARGETPLATFORM nginx
 
 COPY --from=builder /app/output /usr/share/nginx/html
 
