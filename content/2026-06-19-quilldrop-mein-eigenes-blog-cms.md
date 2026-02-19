@@ -1,7 +1,8 @@
 ---
 title: 'QuillDrop - Mein eigenes Blog-CMS ist fertig'
-date: 2025-06-19 10:00:00
+date: 2026-06-19 10:00:00
 author: ruediger
+cover: "/images/posts/2026/02/quilldrop.webp"
 tags: [Go, Blog, CMS, QuillDrop, Open-Source, Self-Hosted]
 categories:
   - Internet
