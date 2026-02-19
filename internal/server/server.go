@@ -21,8 +21,10 @@ func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
 	tagMap := content.CollectTags(posts)
 	catMap := content.CollectCategories(posts)
 	postMap := make(map[string]*content.Post)
-	for _, p := range posts {
+	postIndex := make(map[string]int)
+	for i, p := range posts {
 		postMap[p.Slug] = p
+		postIndex[p.Slug] = i
 	}
 	pageMap := make(map[string]*content.Page)
 	for _, p := range pages {
@@ -174,6 +176,14 @@ func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
 			return
 		}
 		data := templates.PostData{Site: site, Post: post}
+		// Posts are sorted newest first: index 0 = newest
+		idx := postIndex[slug]
+		if idx > 0 {
+			data.PrevPost = posts[idx-1] // newer
+		}
+		if idx < len(posts)-1 {
+			data.NextPost = posts[idx+1] // older
+		}
 		if err := templates.RenderPost(w, data); err != nil {
 			log.Printf("Error rendering post: %v", err)
 			http.Error(w, "Internal Server Error", 500)

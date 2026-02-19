@@ -24,6 +24,24 @@
     <div class="post-content">
         {{safeHTML .Post.HTMLContent}}
     </div>
+    <nav class="post-nav">
+        {{if .PrevPost}}
+        <a href="/posts/{{.PrevPost.Slug}}/" class="post-nav-link post-nav-prev">
+            <span class="post-nav-label">&larr; Neuerer Artikel</span>
+            <span class="post-nav-title">{{.PrevPost.Title}}</span>
+        </a>
+        {{else}}
+        <span class="post-nav-link post-nav-prev disabled"></span>
+        {{end}}
+        {{if .NextPost}}
+        <a href="/posts/{{.NextPost.Slug}}/" class="post-nav-link post-nav-next">
+            <span class="post-nav-label">Älterer Artikel &rarr;</span>
+            <span class="post-nav-title">{{.NextPost.Title}}</span>
+        </a>
+        {{else}}
+        <span class="post-nav-link post-nav-next disabled"></span>
+        {{end}}
+    </nav>
     <div class="post-footer">
         <a href="/" class="back-link">&larr; Zurück zur Startseite</a>
     </div>

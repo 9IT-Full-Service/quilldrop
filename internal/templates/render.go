@@ -31,8 +31,10 @@ type HomeData struct {
 }
 
 type PostData struct {
-	Site SiteData
-	Post *content.Post
+	Site     SiteData
+	Post     *content.Post
+	PrevPost *content.Post // newer post (nil if this is the newest)
+	NextPost *content.Post // older post (nil if this is the oldest)
 }
 
 type TagsData struct {

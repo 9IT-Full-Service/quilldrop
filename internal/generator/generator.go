@@ -67,11 +67,19 @@ func Generate(cfg *config.Config, posts []*content.Post, pages []*content.Page) 
 	}
 
 	// 2. Individual posts
-	for _, post := range posts {
+	for i, post := range posts {
 		dir := filepath.Join(out, "posts", post.Slug)
 		os.MkdirAll(dir, 0755)
+		data := templates.PostData{Site: site, Post: post}
+		// Posts are sorted newest first: index 0 = newest
+		if i > 0 {
+			data.PrevPost = posts[i-1] // newer
+		}
+		if i < len(posts)-1 {
+			data.NextPost = posts[i+1] // older
+		}
 		writeTemplate(filepath.Join(dir, "index.html"), func(f *os.File) error {
-			return templates.RenderPost(f, templates.PostData{Site: site, Post: post})
+			return templates.RenderPost(f, data)
 		})
 	}
 
