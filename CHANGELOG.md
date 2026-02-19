@@ -1,3 +1,11 @@
+## [1.1.9](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.8...v1.1.9) (2026-02-19)
+
+
+### Bug Fixes
+
+* images docker image ([d7c4175](https://github.com/9IT-Full-Service/quilldrop/commit/d7c4175f72073a032028924b0628a037270640a2))
+* TARGETPLATFORM ([93c531e](https://github.com/9IT-Full-Service/quilldrop/commit/93c531e52b3639d63ae84c50c33a630ee48e1986))
+
 ## [1.1.8](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.7...v1.1.8) (2026-02-19)
 
 
