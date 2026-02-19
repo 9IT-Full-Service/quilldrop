@@ -1,3 +1,10 @@
+## [1.1.11](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.10...v1.1.11) (2026-02-19)
+
+
+### Bug Fixes
+
+* go version ([bf2c6a3](https://github.com/9IT-Full-Service/quilldrop/commit/bf2c6a3dc11fef823b027d9cbe772a66772a6ead))
+
 ## [1.1.10](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.9...v1.1.10) (2026-02-19)
 
 
