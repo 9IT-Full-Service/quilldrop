@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.11...v1.2.0) (2026-02-19)
+
+
+### Features
+
+* add navigation for previous and next posts ([d1bf374](https://github.com/9IT-Full-Service/quilldrop/commit/d1bf374fa130243a8a3a18ff4545bbdd270e9448))
+
 ## [1.1.11](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.10...v1.1.11) (2026-02-19)
 
 
