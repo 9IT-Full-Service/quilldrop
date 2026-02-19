@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/9IT-Full-Service/quilldrop/compare/v1.0.1...v1.0.2) (2026-02-19)
+
+
+### Bug Fixes
+
+* release action ([722792f](https://github.com/9IT-Full-Service/quilldrop/commit/722792ff9130693a35592e74b4535afb5adfaaac))
+
 ## [1.0.1](https://github.com/9IT-Full-Service/quilldrop/compare/v1.0.0...v1.0.1) (2026-02-19)
 
 
