@@ -1,3 +1,10 @@
+## [1.1.7](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.6...v1.1.7) (2026-02-19)
+
+
+### Bug Fixes
+
+* docker images image [skip ci] ([d6b8530](https://github.com/9IT-Full-Service/quilldrop/commit/d6b85303cbbe5b0a1c6e384bfe0af160a45cb98c))
+
 ## [1.1.6](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.5...v1.1.6) (2026-02-19)
 
 
