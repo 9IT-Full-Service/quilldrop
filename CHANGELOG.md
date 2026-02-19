@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.0...v1.2.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* update quilldrop doku ([77d8f24](https://github.com/9IT-Full-Service/quilldrop/commit/77d8f24773dafbfa40bc7a21d1211af10546da4e))
+
 # [1.2.0](https://github.com/9IT-Full-Service/quilldrop/compare/v1.1.11...v1.2.0) (2026-02-19)
 
 
