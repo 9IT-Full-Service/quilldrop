@@ -27,6 +27,9 @@ jobs:
             goarch: amd64
           - goos: linux
             goarch: arm64
+          - goos: linux
+            goarch: arm
+            goarm: '7'
           - goos: darwin
             goarch: amd64
           - goos: darwin
@@ -48,11 +51,17 @@ jobs:
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
+          GOARM: ${{ matrix.goarm }}
           CGO_ENABLED: '0'
         run: |
           set -euo pipefail
 
-          BIN="${BINARY_NAME}-${GOOS}-${GOARCH}"
+          SUFFIX="${GOOS}-${GOARCH}"
+          if [ -n "${GOARM}" ]; then
+            SUFFIX="${SUFFIX}v${GOARM}"
+          fi
+
+          BIN="${BINARY_NAME}-${SUFFIX}"
           if [ "${GOOS}" = "windows" ]; then
             BIN="${BIN}.exe"
           fi
@@ -61,21 +70,23 @@ jobs:
 
           mkdir -p dist
           if [ "${GOOS}" = "windows" ]; then
-            zip "dist/${BINARY_NAME}-${GOOS}-${GOARCH}.zip" "${BIN}"
+            zip "dist/${BINARY_NAME}-${SUFFIX}.zip" "${BIN}"
           else
-            tar -czf "dist/${BINARY_NAME}-${GOOS}-${GOARCH}.tar.gz" "${BIN}"
+            tar -czf "dist/${BINARY_NAME}-${SUFFIX}.tar.gz" "${BIN}"
           fi
 
       - name: Generate checksum
+        env:
+          SUFFIX: ${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goarm && format('v{0}', matrix.goarm) || '' }}
         run: |
           cd dist
-          sha256sum * > checksums-${{ matrix.goos }}-${{ matrix.goarch }}.txt
-          cat checksums-${{ matrix.goos }}-${{ matrix.goarch }}.txt
+          sha256sum * > checksums-${SUFFIX}.txt
+          cat checksums-${SUFFIX}.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.BINARY_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: ${{ env.BINARY_NAME }}-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.goarm && format('v{0}', matrix.goarm) || '' }}
           path: dist/*
           if-no-files-found: error
 
