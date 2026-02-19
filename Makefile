@@ -1,6 +1,10 @@
-.PHONY: serve build docker-static docker-run test clean docker-up docker-down generate-keys migrate
+.PHONY: serve build docker-images docker-static docker-run
 
+GIT := $(shell git pull --quiet 2>/dev/null || true)
 LATEST_TAG := $(shell git tag --sort=-version:refname | head -n 1)
+
+tag:
+	@echo "Latest tag: $(LATEST_TAG)"
 
 serve:
 	go run . serve

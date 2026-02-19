@@ -1,13 +1,17 @@
-FROM --platform=$TARGETPLATFORM nginx AS builder
-
-WORKDIR /app
-
+FROM --platform=$TARGETPLATFORM golang:1.23-alpine AS quilldrop
+WORKDIR /build
+COPY go.mod go.sum ./
+RUN go mod download
 COPY --exclude=static/images . .
+RUN CGO_ENABLED=0 go build -o quilldrop
 
+FROM --platform=$TARGETPLATFORM nginx AS builder
+WORKDIR /app
+COPY --from=quilldrop /build/quilldrop ./quilldrop
+COPY --exclude=static/images . .
 RUN ./quilldrop generate
 
+
 FROM --platform=$TARGETPLATFORM nginx
-
 COPY --from=builder /app/output /usr/share/nginx/html
-
 EXPOSE 80
