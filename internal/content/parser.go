@@ -30,6 +30,7 @@ func init() {
 	md = goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
+			extension.Footnote,
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("dracula"),
 				highlighting.WithFormatOptions(

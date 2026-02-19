@@ -1343,6 +1343,44 @@ body {
     }
 }
 
+/* Footnotes */
+.post-content .footnotes {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.post-content .footnotes hr {
+    display: none;
+}
+
+.post-content .footnotes ol {
+    padding-left: 1.5rem;
+}
+
+.post-content .footnotes li {
+    margin-bottom: 0.5rem;
+}
+
+.post-content sup a.footnote-ref {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0 2px;
+}
+
+.post-content sup a.footnote-ref:hover {
+    text-decoration: underline;
+}
+
+.post-content .footnote-backref {
+    color: var(--accent);
+    text-decoration: none;
+    margin-left: 0.3rem;
+}
+
 /* Video elements */
 .post-content video {
     max-width: 100%;
