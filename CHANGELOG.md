@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.6...v1.2.7) (2026-02-19)
+
+
+### Bug Fixes
+
+* add binary release ([7b66c42](https://github.com/9IT-Full-Service/quilldrop/commit/7b66c42f46108d01c89382b771faf6c838759cce))
+
 ## [1.2.6](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.5...v1.2.6) (2026-02-19)
 
 
