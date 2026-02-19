@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM nginx 
+FROM --platform=$TARGETPLATFORM nginx 
 
 WORKDIR /app
 
