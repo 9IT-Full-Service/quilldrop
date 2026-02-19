@@ -1,3 +1,11 @@
+## [1.2.3](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.2...v1.2.3) (2026-02-19)
+
+
+### Bug Fixes
+
+* add cover image ([b06fc05](https://github.com/9IT-Full-Service/quilldrop/commit/b06fc05be6f4eeb9e0fa94e2059f153f9dc30f33))
+* update post date and add cover ([f342bfb](https://github.com/9IT-Full-Service/quilldrop/commit/f342bfb2c81124dca206b86ff503da34963fc7b4))
+
 ## [1.2.2](https://github.com/9IT-Full-Service/quilldrop/compare/v1.2.1...v1.2.2) (2026-02-19)
 
 
