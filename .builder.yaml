@@ -1,0 +1,93 @@
+# Build-Anweisungen für den Builder-Webservice (builder/).
+# Was hier steht, taucht auf der Repo-Seite des Builders als auswählbare
+# Targets auf. Siehe builder/README.md.
+
+version: 1
+name: quildrop
+
+targets:
+
+  # ---- Das Build-Werkzeug in diesem Repo ----
+  - id: quildrop
+    name: quildrop bauen und pushen
+    description: Binary des quildrop aus dem Verzeichnis ./ erstellen
+    dir: ./
+    default: true
+    steps:
+      # - id: check
+      #   name: fmt, vet, test
+      #   run: make test
+      - id: Build all Arch
+        name: all Arch build
+        run: make build
+      - id: commit-build
+        name: commit build
+        run: make commit-build
+
+
+  # # ---- Beides zusammen ----
+  # - id: build
+  #   name: Alle Plattformen
+  #   description: Alle Plattformen
+  #   steps:
+  #     - id: build
+  #       name: Alle Plattformen
+  #       run: make build
+  #     - id: commit-build
+  #       name: commit build
+  #       run: make commit-build
+
+  - id: build-macos
+    name: build macos
+    description: Build MacOD
+    steps:
+      - id: build-macos
+        name: build macos
+        run: make build-macos
+      - id: commit-build
+        name: commit build
+        run: make commit-build
+  
+  - id: build-linux
+    name: build linux
+    description: Build Linux
+    steps:
+      - id: build-linux
+        name: build linux
+        run: make build-linux
+      - id: commit-build
+        name: commit build
+        run: make commit-build
+
+  - id: build-windows
+    name: build windows
+    description: Build Windows
+    steps:
+      - id: build-windows
+        name: build windows
+        run: make build-windows
+      - id: commit-build
+        name: commit build
+        run: make commit-build
+
+  - id: build-raspberry
+    name: build raspberry
+    description: Build Raspberry Pi
+    steps:
+      - id: build-raspberry
+        name: build raspberry
+        run: make build-raspberry
+      - id: commit-build
+        name: commit build
+        run: make commit-build
+
+  - id: checksum
+    name: checksum
+    description: Checksumme der Binaries
+    steps:
+      - id: checksum
+        name: checksum
+        run: make checksums
+      - id: commit-build
+        name: commit build
+        run: make commit-build
