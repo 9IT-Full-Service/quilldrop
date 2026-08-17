@@ -86,6 +86,12 @@ checksums:
 		fi
 	@echo "Checksums: $(DIST)/checksums.txt"
 
+commit-build:
+	@echo "Commit build: $(GIT)"
+	@git add dist
+	@git commit -m "Commit binaries for" || true
+	@git push 
+
 # Copy the default theme: make new-theme NAME=newdesign
 new-theme:
 	@test -n "$(NAME)" || { echo "Usage: make new-theme NAME=<theme>"; exit 1; }
