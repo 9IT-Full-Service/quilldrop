@@ -1,0 +1,93 @@
+{{define "base"}}<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{block "title" .}}{{.Site.Title}}{{end}}</title>
+    <meta name="description" content="{{.Site.Description}}">
+    <link rel="alternate" type="application/rss+xml" title="{{.Site.Title}} RSS Feed" href="/index.xml">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/png" href="/images/ehc/EHC_Logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+    <link rel="manifest" href="/static/icons/site.webmanifest">
+    <meta name="theme-color" content="#0a0a0a">
+</head>
+<body>
+
+<div class="bg-fixed" aria-hidden="true"></div>
+<div class="bg-overlay" aria-hidden="true"></div>
+
+<header class="navbar">
+    <div class="nav-inner">
+        <a href="/" class="nav-brand">
+            <img src="/images/ehc/EHC_Logo.webp" alt="EHC Logo">
+            <span class="nav-brand-text">
+                <span class="name">{{.Site.Title}}</span>
+                <span class="sub">We Are Family</span>
+            </span>
+        </a>
+
+        <button class="hamburger" id="hamburger" aria-label="Menü öffnen">
+            <span></span><span></span><span></span>
+        </button>
+
+        <nav class="nav-links" id="nav-links" aria-label="Hauptnavigation">
+            {{range .Site.Menu}}
+            {{if hasChildren .}}
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">{{.Label}} <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                <div class="nav-dropdown-menu">
+                    {{range .Children}}<a href="{{.URL}}">{{.Label}}</a>{{end}}
+                </div>
+            </div>
+            {{else}}
+            <a href="{{.URL}}">{{.Label}}</a>
+            {{end}}
+            {{end}}
+
+            <div class="search-container" id="search-container">
+                <button class="search-toggle" id="search-toggle" aria-label="Suche">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+                <div class="search-box" id="search-box">
+                    <input type="text" id="search-input" placeholder="Suche..." autocomplete="off">
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
+
+            <a href="/index.xml" class="nav-rss" title="RSS Feed" aria-label="RSS Feed">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    {{block "content" .}}{{end}}
+</main>
+
+<div class="corner-fixed" aria-hidden="true">
+    <img src="/images/ehc/we-are-family.webp" alt="">
+</div>
+
+<footer class="footer">
+    <div class="footer-inner">
+        &copy; <span id="year"></span> {{.Site.Title}} &middot; We Are Family
+        &middot; <a href="/sites/impressum/">Impressum</a>
+        &middot; <a href="/sites/datenschutz/">Datenschutz</a>
+    </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/static/js/theme.js"></script>
+<script src="/static/js/search.js"></script>
+    <script>
+        (function () {
+        var i = new Image(1, 1);
+        i.src = "https://assets.tytik.cloud/assets/img/s.gif"
+                + "?u=" + encodeURIComponent(location.href)
+                + "&ref=" + encodeURIComponent(document.referrer);
+        })();
+    </script>
+</body>
+</html>{{end}}

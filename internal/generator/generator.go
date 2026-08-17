@@ -14,9 +14,10 @@ import (
 )
 
 func Generate(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
-	if err := templates.Init(); err != nil {
+	if err := templates.Init(cfg.ThemeDir()); err != nil {
 		log.Fatalf("Failed to init templates: %v", err)
 	}
+	log.Printf("Using theme %q from %s", cfg.Theme, cfg.ThemeDir())
 
 	out := cfg.OutputDir
 
@@ -144,12 +145,21 @@ func Generate(cfg *config.Config, posts []*content.Post, pages []*content.Page) 
 	// 9. Search index
 	GenerateSearchIndex(posts, filepath.Join(out, "search-index.json"))
 
-	// 10. Copy static assets (skip images/ subdirectory — handled separately)
-	copyStaticDir("static", filepath.Join(out, "static"), []string{"images", "videos"})
+	// 9b. llms.txt / llms-full.txt for LLM ingestion (https://llmstxt.org/)
+	GenerateLLMsFiles(cfg, posts, pages, out)
+
+	// 10. Copy static assets: theme assets first, site assets afterwards so
+	// files in the site's static/ override the ones shipped with the theme.
+	// (skip images/ subdirectory — handled separately)
+	// Theme assets are copied as-is: a theme's own images belong to /static/images/.
+	if _, err := os.Stat(cfg.ThemeStaticDir()); err == nil {
+		copyStaticDir(cfg.ThemeStaticDir(), filepath.Join(out, "static"), nil)
+	}
+	copyStaticDir(cfg.StaticDir, filepath.Join(out, "static"), []string{"images", "videos"})
 
 	// 11. Copy images + videos to root /images/ and /videos/ (cover paths use /images/...)
 	for _, dir := range []string{"images", "videos"} {
-		src := filepath.Join("static", dir)
+		src := filepath.Join(cfg.StaticDir, dir)
 		dst := filepath.Join(out, dir)
 		if _, err := os.Stat(src); err == nil {
 			copyStaticDir(src, dst, nil)

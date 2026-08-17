@@ -1,0 +1,14 @@
+{{define "title"}}Tags &middot; {{.Site.Title}}{{end}}
+{{define "content"}}
+<div class="tags-page">
+    <h1>Tags</h1>
+    <div class="tags-cloud">
+        {{range $tag, $count := .Tags}}
+        <a href="/tags/{{lower $tag}}/" class="tag tag-large">{{$tag}} <span class="tag-count">{{$count}}</span></a>
+        {{end}}
+    </div>
+    <div class="post-footer">
+        <a href="/" class="back-link">&larr; Zurück zur Startseite</a>
+    </div>
+</div>
+{{end}}

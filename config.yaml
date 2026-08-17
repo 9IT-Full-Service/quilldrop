@@ -2,11 +2,16 @@ title: "Küpper Blog"
 description: "Tech Blog - DevOps, Kubernetes, Self-Hosted"
 author: "Rüdiger Küpper"
 baseURL: "https://blog.kuepper.nrw"
-port: 8080
+port: 8180
 postsPerPage: 5
 contentDir: "content"
 sitesDir: "sites"
+staticDir: "static"
 outputDir: "output"
+
+# Theme: read from <themesDir>/<theme>/
+themesDir: "themes"
+theme: "ehc"
 
 menu:
   - label: "Home"

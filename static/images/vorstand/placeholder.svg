@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f1f1f"/>
+      <stop offset="100%" stop-color="#0e0e0e"/>
+    </linearGradient>
+    <linearGradient id="fig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f37021"/>
+      <stop offset="100%" stop-color="#c5571a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#f37021"/>
+      <stop offset="50%"  stop-color="#ff7a2a"/>
+      <stop offset="100%" stop-color="#f37021"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Hintergrund -->
+  <rect width="400" height="400" fill="url(#bg)"/>
+
+  <!-- EHC Kicker oben -->
+  <text x="200" y="40" text-anchor="middle"
+        font-family="Segoe UI, Tahoma, sans-serif"
+        font-size="15" font-weight="700"
+        letter-spacing="6" fill="#ffffff" opacity="0.55">EHC</text>
+
+  <!-- Personen-Silhouette (mittig, etwas kompakter) -->
+  <circle cx="200" cy="130" r="46" fill="url(#fig)" opacity="0.88"/>
+  <path d="M 200 188 C 152 188, 118 226, 118 295 L 282 295 C 282 226, 248 188, 200 188 Z"
+        fill="url(#fig)" opacity="0.88"/>
+
+  <!-- Schwungvoller Pinselstrich als Trenner -->
+  <path d="M 70 322 Q 200 308, 330 322"
+        stroke="url(#accent)" stroke-width="3"
+        fill="none" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- "WE ARE" Subtext -->
+  <text x="200" y="352" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="13" font-weight="700"
+        letter-spacing="6" fill="#ffffff" opacity="0.6">WE ARE</text>
+
+  <!-- "FAMILY" Hauptzeile mit Gradient -->
+  <text x="200" y="388" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-style="italic" font-size="30" font-weight="900"
+        letter-spacing="2" fill="url(#accent)">FAMILY</text>
+</svg>

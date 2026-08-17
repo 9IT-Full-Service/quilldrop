@@ -207,12 +207,25 @@ quilldrop/
 │   └── projekte/
 │       └── mein-projekt/
 │           └── index.md
-├── static/                          # Statische Assets
-│   ├── css/style.css
-│   ├── js/
-│   │   ├── theme.js                 # Dark/Light Toggle + TOC Generator
-│   │   └── search.js                # Client-seitige Volltextsuche
+├── static/                          # Seiten-Assets (Icons, Bilder, ...)
+│   ├── icons/
 │   └── images/
+├── themes/                          # Themes — ein Verzeichnis je Theme
+│   └── default/
+│       ├── templates/
+│       │   ├── base.html            # Base Layout + Navbar + Suche
+│       │   ├── home.html            # Homepage + Pagination
+│       │   ├── post.html            # Einzelner Post + Prev/Next Navigation
+│       │   ├── page.html            # Statische Seite
+│       │   ├── tags.html            # Tag-Übersicht
+│       │   ├── tag.html             # Tag-Seite
+│       │   ├── categories.html      # Kategorie-Übersicht
+│       │   └── category.html        # Kategorie-Seite
+│       └── static/                  # Theme-Assets (werden nach /static/ gemerged)
+│           ├── css/style.css
+│           └── js/
+│               ├── theme.js         # Dark/Light Toggle + TOC Generator
+│               └── search.js        # Client-seitige Volltextsuche
 ├── internal/
 │   ├── config/config.go             # YAML Config Loader
 │   ├── content/
@@ -224,16 +237,8 @@ quilldrop/
 │   │   ├── generator.go             # Static Site Generator
 │   │   └── search.go                # Search-Index Generator (JSON)
 │   └── templates/
-│       ├── render.go                # Template Engine + Functions
-│       ├── rss.go                   # RSS Feed Generator
-│       ├── base.html                # Base Layout + Navbar + Suche
-│       ├── home.html                # Homepage + Pagination
-│       ├── post.html                # Einzelner Post + Prev/Next Navigation
-│       ├── page.html                # Statische Seite
-│       ├── tags.html                # Tag-Übersicht
-│       ├── tag.html                 # Tag-Seite
-│       ├── categories.html          # Kategorie-Übersicht
-│       └── category.html            # Kategorie-Seite
+│       ├── render.go                # Template Engine + Functions (lädt das Theme)
+│       └── rss.go                   # RSS Feed Generator
 └── output/                          # Generierte statische Dateien
 ```
 
@@ -243,7 +248,7 @@ quilldrop/
 |-----------|-------------|
 | Sprache | Go (Standard Library + minimale Dependencies) |
 | HTTP Server | `net/http` (Go Standard Library) |
-| Templates | `html/template` mit `embed.FS` |
+| Templates | `html/template`, zur Laufzeit aus `themes/<name>/templates/` geladen |
 | Markdown | Goldmark + GFM + Emoji + Chroma |
 | Konfiguration | YAML via `gopkg.in/yaml.v3` |
 | Syntax Highlighting | Chroma (Dracula Theme) |
@@ -261,13 +266,63 @@ QuillDrop hat bewusst minimale Abhängigkeiten - **kein Web-Framework**, **kein 
 - `github.com/alecthomas/chroma/v2` - Syntax Highlighting Engine
 - `gopkg.in/yaml.v3` - YAML Parser
 
-### Embedded Assets
+### Themes
 
-Alle HTML-Templates werden via Go's `//go:embed` Directive direkt in das Binary eingebettet. Das bedeutet:
+Templates und deren Assets liegen ausserhalb des Binaries in `themes/<name>/`. Dadurch
+kann dasselbe QuillDrop-Binary beliebig viele Websites bedienen, jede mit eigenem Design:
 
-- **Einzelnes Binary** - Keine externen Template-Dateien nötig
-- **Schneller Start** - Kein Dateisystem-Zugriff für Templates
-- **Einfaches Deployment** - Ein Binary + Config + Content = fertig
+```
+themes/
+├── default/
+│   ├── templates/       # Pflicht: base, home, post, page, tags, tag, categories, category
+│   └── static/          # Optional: CSS, JS, Theme-Bilder
+└── newdesign/
+    ├── templates/
+    └── static/
+```
+
+Das aktive Theme wird in der `config.yaml` gewählt:
+
+```yaml
+themesDir: "themes"   # Default
+theme: "default"      # liest aus themes/default/
+```
+
+Oder temporär per Flag, z. B. um ein Redesign zu testen:
+
+```bash
+./quilldrop serve -theme newdesign
+./quilldrop generate -theme newdesign
+```
+
+**Neues Theme anlegen:**
+
+```bash
+cp -r themes/default themes/newdesign      # oder: make new-theme NAME=newdesign
+# themes/newdesign/templates/*.html und themes/newdesign/static/css/style.css anpassen
+./quilldrop serve -theme newdesign -dev
+```
+
+**Live-Reload:** Mit `-dev` werden die Templates bei jedem Request neu aus dem
+Theme-Verzeichnis gelesen — Änderungen an HTML, CSS und JS sind nach einem
+Browser-Reload sichtbar, ohne den Server neu zu starten (im Dev-Modus wird
+zusätzlich `Cache-Control: no-store` gesetzt, damit der Browser nichts
+zwischenspeichert). Ein fehlerhaftes Template liefert eine 500 statt einer halb
+gerenderten Seite; die genaue Fehlermeldung mit Datei und Zeile steht im
+Server-Log. Ohne `-dev` werden die Templates wie bisher einmal beim Start
+geparst. Neue oder geänderte Markdown-Dateien erfordern weiterhin einen Neustart.
+
+Ein Theme muss alle acht Templates enthalten (`base.html`, `home.html`, `post.html`,
+`page.html`, `tags.html`, `tag.html`, `categories.html`, `category.html`);
+fehlt eines oder existiert das Theme nicht, bricht QuillDrop mit einer klaren
+Fehlermeldung ab.
+
+**Statische Assets** werden gemerged: zuerst `themes/<name>/static/`, danach das
+eigene `static/` der Seite — gleichnamige Dateien der Seite gewinnen also
+(z. B. `static/icons/favicon.ico`). Das Design gehört ins Theme (CSS, JS),
+seitenspezifisches Material bleibt in `static/` (Icons, Bilder). Beides wird unter
+`/static/` ausgeliefert; `static/images/` und `static/videos/` zusätzlich unter
+`/images/` und `/videos/`.
 
 ## Konfiguration
 
@@ -282,7 +337,10 @@ port: 8080
 postsPerPage: 5
 contentDir: "content"
 sitesDir: "sites"
+staticDir: "static"
 outputDir: "output"
+themesDir: "themes"
+theme: "default"
 
 menu:
   - label: "Home"
@@ -303,7 +361,10 @@ menu:
 | `postsPerPage` | `5` | Anzahl Posts pro Seite |
 | `contentDir` | `content` | Verzeichnis für Blog-Posts |
 | `sitesDir` | `sites` | Verzeichnis für statische Seiten |
+| `staticDir` | `static` | Verzeichnis für Seiten-Assets |
 | `outputDir` | `output` | Ausgabeverzeichnis für statische Generierung |
+| `themesDir` | `themes` | Verzeichnis mit allen Themes |
+| `theme` | `default` | Aktives Theme, gelesen aus `<themesDir>/<theme>/` (Override: `-theme`) |
 | `menu` | `[]` | Navigationsmenü mit optionalen Untermenüs |
 
 ## Schnellstart
@@ -354,6 +415,9 @@ Das ist mein erster Post mit **QuillDrop**.
 
 # Oder direkt mit Go
 go run . serve
+
+# Mit Live-Reload für Templates (Theme-Entwicklung)
+./quilldrop serve -dev
 ```
 
 Dann im Browser: [http://localhost:8080](http://localhost:8080)

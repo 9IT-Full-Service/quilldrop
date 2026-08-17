@@ -5,18 +5,23 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path"
+	"path/filepath"
 	"strconv"
 	"strings"
 
 	"github.com/ruedigerp/newblog/internal/config"
 	"github.com/ruedigerp/newblog/internal/content"
+	"github.com/ruedigerp/newblog/internal/generator"
 	"github.com/ruedigerp/newblog/internal/templates"
 )
 
 func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
-	if err := templates.Init(); err != nil {
+	if err := templates.Init(cfg.ThemeDir()); err != nil {
 		log.Fatalf("Failed to init templates: %v", err)
 	}
+	log.Printf("Using theme %q from %s", cfg.Theme, cfg.ThemeDir())
 
 	tagMap := content.CollectTags(posts)
 	catMap := content.CollectCategories(posts)
@@ -41,11 +46,14 @@ func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
 
 	mux := http.NewServeMux()
 
-	// Static files
-	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	// Static files: the site's static/ wins, the theme's static/ is the fallback.
+	// Mirrors the merge order used by the generator.
+	mux.Handle("/static/", http.StripPrefix("/static/",
+		staticHandler(cfg.StaticDir, cfg.ThemeStaticDir())))
 
 	// Images (served from static/images, so /images/... paths in posts work directly)
-	mux.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("static/images"))))
+	mux.Handle("/images/", http.StripPrefix("/images/",
+		http.FileServer(http.Dir(filepath.Join(cfg.StaticDir, "images")))))
 
 	// RSS Feed
 	mux.HandleFunc("/index.xml", func(w http.ResponseWriter, r *http.Request) {
@@ -59,6 +67,28 @@ func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
 			http.Error(w, "Internal Server Error", 500)
 		}
 	})
+
+	// llms.txt — concise index for LLMs (https://llmstxt.org/)
+	if cfg.LLMs.EnabledOrDefault() {
+		mux.HandleFunc("/llms.txt", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
+			if err := generator.RenderLLMsTxt(w, cfg, posts, pages); err != nil {
+				log.Printf("Error rendering llms.txt: %v", err)
+				http.Error(w, "Internal Server Error", 500)
+			}
+		})
+	}
+
+	// llms-full.txt — full markdown of every post
+	if cfg.LLMs.FullOrDefault() {
+		mux.HandleFunc("/llms-full.txt", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "text/markdown; charset=utf-8")
+			if err := generator.RenderLLMsFullTxt(w, cfg, posts); err != nil {
+				log.Printf("Error rendering llms-full.txt: %v", err)
+				http.Error(w, "Internal Server Error", 500)
+			}
+		})
+	}
 
 	// Search index
 	mux.HandleFunc("/search-index.json", func(w http.ResponseWriter, r *http.Request) {
@@ -256,9 +286,44 @@ func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
 		handleCategory(w, r, site, catMap)
 	})
 
+	var handler http.Handler = mux
+	if templates.DevMode() {
+		// Templates are re-parsed per request; keep the browser from caching
+		// the theme's CSS/JS so edits show up on reload.
+		handler = noCache(mux)
+		log.Printf("Dev mode: templates in %s are reloaded on every request", cfg.ThemeTemplatesDir())
+	}
+
 	addr := fmt.Sprintf(":%d", cfg.Port)
 	log.Printf("Blog server starting on http://localhost%s", addr)
-	log.Fatal(http.ListenAndServe(addr, mux))
+	log.Fatal(http.ListenAndServe(addr, handler))
+}
+
+// noCache disables browser caching — used in dev mode only.
+func noCache(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "no-store, max-age=0")
+		next.ServeHTTP(w, r)
+	})
+}
+
+// staticHandler serves static assets from several directories: the first
+// directory that contains the requested file wins.
+func staticHandler(dirs ...string) http.Handler {
+	servers := make([]http.Handler, len(dirs))
+	for i, d := range dirs {
+		servers[i] = http.FileServer(http.Dir(d))
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		rel := filepath.FromSlash(path.Clean("/" + r.URL.Path))
+		for i, d := range dirs {
+			if info, err := os.Stat(filepath.Join(d, rel)); err == nil && !info.IsDir() {
+				servers[i].ServeHTTP(w, r)
+				return
+			}
+		}
+		http.NotFound(w, r)
+	})
 }
 
 func handleTag(w http.ResponseWriter, r *http.Request, site templates.SiteData, tagMap map[string][]*content.Post) {

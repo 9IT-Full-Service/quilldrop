@@ -1,19 +1,18 @@
 package templates
 
 import (
-	"embed"
+	"bytes"
 	"fmt"
 	"html/template"
 	"io"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/ruedigerp/newblog/internal/config"
 	"github.com/ruedigerp/newblog/internal/content"
 )
-
-//go:embed *.html
-var templateFS embed.FS
 
 type SiteData struct {
 	Title       string
@@ -142,46 +141,113 @@ var funcMap = template.FuncMap{
 }
 
 var (
-	homeTmpl       *template.Template
-	postTmpl       *template.Template
-	tagsTmpl       *template.Template
-	tagTmpl        *template.Template
-	categoriesTmpl *template.Template
-	categoryTmpl   *template.Template
-	pageTmpl       *template.Template
+	homeTmpl       *view
+	postTmpl       *view
+	tagsTmpl       *view
+	tagTmpl        *view
+	categoriesTmpl *view
+	categoryTmpl   *view
+	pageTmpl       *view
 )
 
-func parseTemplate(files ...string) (*template.Template, error) {
-	return template.New("").Funcs(funcMap).ParseFS(templateFS, files...)
+// templateDir holds the directory the templates of the active theme were
+// loaded from (e.g. "themes/default/templates").
+var templateDir string
+
+// devMode re-parses templates on every render, so theme edits become visible
+// without restarting the server.
+var devMode bool
+
+// SetDevMode enables or disables template live reload. Must be called before
+// serving requests.
+func SetDevMode(enabled bool) {
+	devMode = enabled
 }
 
-func Init() error {
-	var err error
-	homeTmpl, err = parseTemplate("base.html", "home.html")
+// DevMode reports whether template live reload is enabled.
+func DevMode() bool {
+	return devMode
+}
+
+// view is a page template together with the theme files it was built from,
+// so it can be re-parsed on demand in dev mode.
+type view struct {
+	files []string
+	tmpl  *template.Template
+}
+
+func newView(files ...string) (*view, error) {
+	tmpl, err := parseTemplate(files...)
+	if err != nil {
+		return nil, err
+	}
+	return &view{files: files, tmpl: tmpl}, nil
+}
+
+func (v *view) execute(w io.Writer, data any) error {
+	if !devMode {
+		return v.tmpl.ExecuteTemplate(w, "base", data)
+	}
+	// Live reload: parse the theme files again and render into a buffer first,
+	// so a broken template does not emit half a page.
+	tmpl, err := parseTemplate(v.files...)
+	if err != nil {
+		return err
+	}
+	var buf bytes.Buffer
+	if err := tmpl.ExecuteTemplate(&buf, "base", data); err != nil {
+		return err
+	}
+	_, err = w.Write(buf.Bytes())
+	return err
+}
+
+func parseTemplate(files ...string) (*template.Template, error) {
+	paths := make([]string, 0, len(files))
+	for _, f := range files {
+		path := filepath.Join(templateDir, f)
+		if _, err := os.Stat(path); err != nil {
+			return nil, fmt.Errorf("missing template %s in theme: %w", f, err)
+		}
+		paths = append(paths, path)
+	}
+	return template.New("").Funcs(funcMap).ParseFiles(paths...)
+}
+
+// Init loads all templates of the theme located in themeDir
+// (e.g. "themes/default"). The templates are expected in themeDir/templates.
+func Init(themeDir string) error {
+	templateDir = filepath.Join(themeDir, "templates")
+	info, err := os.Stat(templateDir)
+	if err != nil || !info.IsDir() {
+		return fmt.Errorf("theme templates not found in %s (check 'theme' and 'themesDir' in config.yaml)", templateDir)
+	}
+
+	homeTmpl, err = newView("base.html", "home.html")
 	if err != nil {
 		return fmt.Errorf("home template: %w", err)
 	}
-	postTmpl, err = parseTemplate("base.html", "post.html")
+	postTmpl, err = newView("base.html", "post.html")
 	if err != nil {
 		return fmt.Errorf("post template: %w", err)
 	}
-	tagsTmpl, err = parseTemplate("base.html", "tags.html")
+	tagsTmpl, err = newView("base.html", "tags.html")
 	if err != nil {
 		return fmt.Errorf("tags template: %w", err)
 	}
-	tagTmpl, err = parseTemplate("base.html", "tag.html")
+	tagTmpl, err = newView("base.html", "tag.html")
 	if err != nil {
 		return fmt.Errorf("tag template: %w", err)
 	}
-	categoriesTmpl, err = parseTemplate("base.html", "categories.html")
+	categoriesTmpl, err = newView("base.html", "categories.html")
 	if err != nil {
 		return fmt.Errorf("categories template: %w", err)
 	}
-	categoryTmpl, err = parseTemplate("base.html", "category.html")
+	categoryTmpl, err = newView("base.html", "category.html")
 	if err != nil {
 		return fmt.Errorf("category template: %w", err)
 	}
-	pageTmpl, err = parseTemplate("base.html", "page.html")
+	pageTmpl, err = newView("base.html", "page.html")
 	if err != nil {
 		return fmt.Errorf("page template: %w", err)
 	}
@@ -189,29 +255,29 @@ func Init() error {
 }
 
 func RenderHome(w io.Writer, data HomeData) error {
-	return homeTmpl.ExecuteTemplate(w, "base", data)
+	return homeTmpl.execute(w, data)
 }
 
 func RenderPost(w io.Writer, data PostData) error {
-	return postTmpl.ExecuteTemplate(w, "base", data)
+	return postTmpl.execute(w, data)
 }
 
 func RenderTags(w io.Writer, data TagsData) error {
-	return tagsTmpl.ExecuteTemplate(w, "base", data)
+	return tagsTmpl.execute(w, data)
 }
 
 func RenderTag(w io.Writer, data TagData) error {
-	return tagTmpl.ExecuteTemplate(w, "base", data)
+	return tagTmpl.execute(w, data)
 }
 
 func RenderCategories(w io.Writer, data CategoriesData) error {
-	return categoriesTmpl.ExecuteTemplate(w, "base", data)
+	return categoriesTmpl.execute(w, data)
 }
 
 func RenderCategory(w io.Writer, data CategoryData) error {
-	return categoryTmpl.ExecuteTemplate(w, "base", data)
+	return categoryTmpl.execute(w, data)
 }
 
 func RenderPage(w io.Writer, data PageData) error {
-	return pageTmpl.ExecuteTemplate(w, "base", data)
+	return pageTmpl.execute(w, data)
 }

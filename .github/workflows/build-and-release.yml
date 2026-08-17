@@ -94,6 +94,11 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          path: src
+
       - name: Download all artifacts
         uses: actions/download-artifact@v8
         with:
@@ -107,6 +112,15 @@ jobs:
           rm checksums-*.txt
           echo "=== checksums.txt ==="
           cat checksums.txt
+
+      # Templates are no longer embedded in the binary — ship the default theme
+      # so a new site can be bootstrapped without cloning the repository.
+      - name: Package default theme
+        run: |
+          set -euo pipefail
+          tar -czf artifacts/${BINARY_NAME}-theme-default.tar.gz -C src themes/default
+          cd artifacts
+          sha256sum ${BINARY_NAME}-theme-default.tar.gz >> checksums.txt
 
       - name: Determine tag
         id: tag
