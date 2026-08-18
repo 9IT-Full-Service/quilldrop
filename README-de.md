@@ -181,6 +181,47 @@ Automatisch generierter RSS 2.0 Feed unter `/index.xml` mit:
 - RSS-Icon in der Navigation
 - URL `/index.xml` für Kompatibilität mit bestehenden Blog-Setups
 
+### Sitemap
+
+Parallel zum RSS-Feed wird eine `sitemap.xml` nach dem [sitemaps.org-Protokoll 0.9](https://www.sitemaps.org/protocol.html) erzeugt - unter `/sitemap.xml` sowohl im dynamischen Server als auch in der statischen Generierung. Enthalten sind:
+
+- Startseite und alle Pagination-Seiten (`/page/2/`, ...)
+- Alle Blog-Posts (`lastmod` aus `update`, sonst `date`)
+- Alle statischen Seiten aus `sites/`
+- Tag- und Kategorie-Übersichten sowie alle einzelnen Tag-/Kategorie-Seiten
+
+Die Sitemap lässt sich in der Config an- und abschalten (Default: aktiv):
+
+```yaml
+sitemap:
+  enabled: true   # false schaltet /sitemap.xml komplett ab
+```
+
+### robots.txt
+
+Ebenfalls automatisch erzeugt: eine `robots.txt` unter `/robots.txt`. Sie verweist automatisch auf die Sitemap, sobald diese aktiviert ist, und lässt sich in der Config konfigurieren (Default: aktiv):
+
+```yaml
+robots:
+  enabled: true
+  userAgent: "*"        # optional, Default "*"
+  disallow:             # optional
+    - /search-index.json
+  allow:                # optional
+    - /
+```
+
+Ohne eigene `allow`/`disallow`-Regeln wird `Allow: /` geschrieben, d.h. die ganze Seite ist freigegeben:
+
+```
+User-agent: *
+Allow: /
+
+Sitemap: https://blog.kuepper.nrw/sitemap.xml
+```
+
+Ist `sitemap.enabled: false` oder `baseURL` leer, entfällt die `Sitemap:`-Zeile.
+
 ### Cover-Bilder
 
 Posts können ein Cover-Bild definieren, das sowohl auf der Startseite (als Post-Card) als auch auf der Einzelansicht angezeigt wird:
@@ -235,10 +276,12 @@ quilldrop/
 │   ├── server/server.go             # HTTP Server
 │   ├── generator/
 │   │   ├── generator.go             # Static Site Generator
+│   │   ├── robots.go                # robots.txt Generator
 │   │   └── search.go                # Search-Index Generator (JSON)
 │   └── templates/
 │       ├── render.go                # Template Engine + Functions (lädt das Theme)
-│       └── rss.go                   # RSS Feed Generator
+│       ├── rss.go                   # RSS Feed Generator
+│       └── sitemap.go               # sitemap.xml Generator
 └── output/                          # Generierte statische Dateien
 ```
 
@@ -356,7 +399,7 @@ menu:
 | `title` | - | Titel der Website |
 | `description` | - | Beschreibung (Meta-Tag + Hero) |
 | `author` | - | Autor der Website |
-| `baseURL` | - | Basis-URL für RSS und absolute Links |
+| `baseURL` | - | Basis-URL für RSS, Sitemap und absolute Links |
 | `port` | `8080` | Port für den dynamischen Server |
 | `postsPerPage` | `5` | Anzahl Posts pro Seite |
 | `contentDir` | `content` | Verzeichnis für Blog-Posts |
@@ -366,6 +409,11 @@ menu:
 | `themesDir` | `themes` | Verzeichnis mit allen Themes |
 | `theme` | `default` | Aktives Theme, gelesen aus `<themesDir>/<theme>/` (Override: `-theme`) |
 | `menu` | `[]` | Navigationsmenü mit optionalen Untermenüs |
+| `sitemap.enabled` | `true` | Erzeugt/serviert `/sitemap.xml` |
+| `robots.enabled` | `true` | Erzeugt/serviert `/robots.txt` (mit Sitemap-Verweis) |
+| `robots.userAgent` | `*` | User-agent-Zeile in der `robots.txt` |
+| `robots.allow` | `[]` | Zusätzliche `Allow:`-Regeln |
+| `robots.disallow` | `[]` | Zusätzliche `Disallow:`-Regeln |
 
 ## Schnellstart
 
@@ -450,6 +498,8 @@ Alle URLs verwenden konsequent Trailing Slashes, um serverseitige Redirects zu v
 | `/sites/ueber-mich/` | Statische Seite |
 | `/sites/projekte/vm-tracker/` | Verschachtelte Projektseite |
 | `/index.xml` | RSS Feed |
+| `/sitemap.xml` | Sitemap für Suchmaschinen (falls aktiviert) |
+| `/robots.txt` | Crawler-Regeln + Sitemap-Verweis (falls aktiviert) |
 | `/search-index.json` | Suchindex (JSON) |
 | `/static/css/style.css` | Statische Assets |
 | `/images/posts/2025/11/cover.webp` | Bilder |

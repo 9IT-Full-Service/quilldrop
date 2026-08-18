@@ -142,6 +142,16 @@ func Generate(cfg *config.Config, posts []*content.Post, pages []*content.Page) 
 		return templates.RenderRSS(f, site, posts[:rssCount])
 	})
 
+	// 8b. sitemap.xml for search engines
+	if cfg.Sitemap.EnabledOrDefault() {
+		writeTemplate(filepath.Join(out, "sitemap.xml"), func(f *os.File) error {
+			return templates.RenderSitemap(f, site, posts, pages, cfg.PostsPerPage)
+		})
+	}
+
+	// 8c. robots.txt (references the sitemap when enabled)
+	GenerateRobotsTxt(cfg, out)
+
 	// 9. Search index
 	GenerateSearchIndex(posts, filepath.Join(out, "search-index.json"))
 
@@ -166,8 +176,15 @@ func Generate(cfg *config.Config, posts []*content.Post, pages []*content.Page) 
 		}
 	}
 
-	log.Printf("Generated %d posts, %d pages, %d tag pages, %d category pages, RSS feed into %s/",
-		len(posts), len(pages), len(tagMap), len(catMap), out)
+	extras := "RSS feed"
+	if cfg.Sitemap.EnabledOrDefault() {
+		extras += ", sitemap"
+	}
+	if cfg.Robots.EnabledOrDefault() {
+		extras += ", robots.txt"
+	}
+	log.Printf("Generated %d posts, %d pages, %d tag pages, %d category pages, %s into %s/",
+		len(posts), len(pages), len(tagMap), len(catMap), extras, out)
 }
 
 func writeTemplate(path string, render func(f *os.File) error) {

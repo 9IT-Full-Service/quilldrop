@@ -68,6 +68,28 @@ func Start(cfg *config.Config, posts []*content.Post, pages []*content.Page) {
 		}
 	})
 
+	// sitemap.xml — URL index for search engines
+	if cfg.Sitemap.EnabledOrDefault() {
+		mux.HandleFunc("/sitemap.xml", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+			if err := templates.RenderSitemap(w, site, posts, pages, cfg.PostsPerPage); err != nil {
+				log.Printf("Error rendering sitemap: %v", err)
+				http.Error(w, "Internal Server Error", 500)
+			}
+		})
+	}
+
+	// robots.txt — crawler rules + sitemap reference
+	if cfg.Robots.EnabledOrDefault() {
+		mux.HandleFunc("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			if err := generator.RenderRobotsTxt(w, cfg); err != nil {
+				log.Printf("Error rendering robots.txt: %v", err)
+				http.Error(w, "Internal Server Error", 500)
+			}
+		})
+	}
+
 	// llms.txt — concise index for LLMs (https://llmstxt.org/)
 	if cfg.LLMs.EnabledOrDefault() {
 		mux.HandleFunc("/llms.txt", func(w http.ResponseWriter, r *http.Request) {

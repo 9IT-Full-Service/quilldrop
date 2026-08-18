@@ -13,6 +13,19 @@ outputDir: "output"
 themesDir: "themes"
 theme: "ehc"
 
+# sitemap.xml für Suchmaschinen (Standard: true)
+sitemap:
+  enabled: true
+
+# robots.txt (Standard: true), verweist automatisch auf die Sitemap
+robots:
+  enabled: true
+  # userAgent: "*"
+  # allow:
+  #   - /
+  # disallow:
+  #   - /search-index.json
+
 menu:
   - label: "Home"
     url: "/"

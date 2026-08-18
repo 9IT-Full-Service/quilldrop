@@ -183,6 +183,47 @@ Automatically generated RSS 2.0 feed at `/index.xml` with:
 - RSS icon in the navigation
 - URL `/index.xml` for compatibility with existing blog setups
 
+### Sitemap
+
+Alongside the RSS feed, a `sitemap.xml` following the [sitemaps.org protocol 0.9](https://www.sitemaps.org/protocol.html) is produced — served at `/sitemap.xml` by the dynamic server and written by the static generator. It contains:
+
+- Homepage and every pagination page (`/page/2/`, ...)
+- All blog posts (`lastmod` from `update`, falling back to `date`)
+- All static pages from `sites/`
+- Tag and category overviews plus every single tag/category page
+
+The sitemap can be switched on and off in the config (default: on):
+
+```yaml
+sitemap:
+  enabled: true   # false disables /sitemap.xml entirely
+```
+
+### robots.txt
+
+A `robots.txt` is generated as well and served at `/robots.txt`. It references the sitemap automatically whenever sitemap generation is enabled, and is configurable (default: on):
+
+```yaml
+robots:
+  enabled: true
+  userAgent: "*"        # optional, defaults to "*"
+  disallow:             # optional
+    - /search-index.json
+  allow:                # optional
+    - /
+```
+
+Without custom `allow`/`disallow` rules an `Allow: /` is written, i.e. the whole site is crawlable:
+
+```
+User-agent: *
+Allow: /
+
+Sitemap: https://blog.kuepper.nrw/sitemap.xml
+```
+
+If `sitemap.enabled: false` or `baseURL` is empty, the `Sitemap:` line is omitted.
+
 ### Cover Images
 
 Posts can define a cover image that is displayed both on the homepage (as a post card) and on the detail view:
@@ -237,10 +278,12 @@ quilldrop/
 │   ├── server/server.go             # HTTP server
 │   ├── generator/
 │   │   ├── generator.go             # Static site generator
+│   │   ├── robots.go                # robots.txt generator
 │   │   └── search.go                # Search index generator (JSON)
 │   └── templates/
 │       ├── render.go                # Template engine + functions (loads the theme)
-│       └── rss.go                   # RSS feed generator
+│       ├── rss.go                   # RSS feed generator
+│       └── sitemap.go               # sitemap.xml generator
 └── output/                          # Generated static files
 ```
 
@@ -356,7 +399,7 @@ menu:
 | `title` | — | Website title |
 | `description` | — | Description (meta tag + hero) |
 | `author` | — | Website author |
-| `baseURL` | — | Base URL for RSS and absolute links |
+| `baseURL` | — | Base URL for RSS, sitemap and absolute links |
 | `port` | `8080` | Port for the dynamic server |
 | `postsPerPage` | `5` | Number of posts per page |
 | `contentDir` | `content` | Directory for blog posts |
@@ -366,6 +409,11 @@ menu:
 | `themesDir` | `themes` | Directory containing all themes |
 | `theme` | `default` | Active theme, read from `<themesDir>/<theme>/` (override: `-theme`) |
 | `menu` | `[]` | Navigation menu with optional submenus |
+| `sitemap.enabled` | `true` | Generates/serves `/sitemap.xml` |
+| `robots.enabled` | `true` | Generates/serves `/robots.txt` (with sitemap reference) |
+| `robots.userAgent` | `*` | User-agent line in `robots.txt` |
+| `robots.allow` | `[]` | Additional `Allow:` rules |
+| `robots.disallow` | `[]` | Additional `Disallow:` rules |
 
 ## Quick Start
 
@@ -450,6 +498,8 @@ All URLs consistently use trailing slashes to avoid server-side redirects:
 | `/sites/about/` | Static page |
 | `/sites/projects/vm-tracker/` | Nested project page |
 | `/index.xml` | RSS feed |
+| `/sitemap.xml` | Sitemap for search engines (if enabled) |
+| `/robots.txt` | Crawler rules + sitemap reference (if enabled) |
 | `/search-index.json` | Search index (JSON) |
 | `/static/css/style.css` | Static assets |
 | `/images/posts/2025/11/cover.webp` | Images |
